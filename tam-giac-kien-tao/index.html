@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Các cách kết hợp của tam giác vuông</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tri: #066cb6;        /* màu tam giác (lấy từ ảnh gốc) */
+    --line: #ffffff;       /* đường chia giữa các miếng */
+    --desk: #e6e9ed;
+    --border: #d3d8de;
+    --ink: #1f2933;
+    --muted: #5f6b76;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--desk); color: var(--ink); }
+  body { font-family: "Be Vietnam Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+  .toolbar { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 16px 16px 0; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 2px; }
+  .seg button, .print { font: inherit; font-size: 13px; border: 0; background: transparent; color: var(--muted); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--tri); color: #fff; }
+  .print { border: 1px solid var(--border); background: #fff; color: var(--ink); border-radius: 8px; padding: 7px 14px; }
+
+  /* Mỗi tờ = 1 trang A4 ngang (297 x 210 mm). Kích thước bên trong tính theo mm của tờ (--mm) */
+  .sheets { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 16px; }
+  .sheet-wrap { width: min(297mm, 100%); container-type: inline-size; }
+  .sheet {
+    --mm: calc(100cqw / 297);
+    width: 100%; aspect-ratio: 297 / 210; overflow: hidden;
+    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 6px 20px rgba(0,0,0,.06);
+    padding: calc(7 * var(--mm));
+    display: flex; flex-direction: column; position: relative;
+  }
+  .pageno { position: absolute; right: calc(7 * var(--mm)); bottom: calc(2.2 * var(--mm)); font-size: calc(2.6 * var(--mm)); color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(3, calc(90 * var(--mm))); justify-content: center;
+           column-gap: calc(5 * var(--mm)); row-gap: calc(4 * var(--mm)); flex: 1; align-content: center; }
+  .card { margin: 0; }
+  .frame { aspect-ratio: 1.07; background: #fff; border: max(0.5px, calc(0.25 * var(--mm))) solid var(--border); border-radius: calc(2 * var(--mm)); overflow: hidden; }
+  .frame svg { display: block; width: 100%; height: 100%; }
+  .frame path { fill: var(--tri); stroke: var(--line); stroke-width: max(0.6px, calc(0.5 * var(--mm))); stroke-linejoin: round; vector-effect: non-scaling-stroke; shape-rendering: geometricPrecision; }
+  figcaption { margin-top: calc(1.2 * var(--mm)); text-align: center; font-size: calc(3.8 * var(--mm)); line-height: 1.2; color: var(--muted); }
+
+  @page { size: A4 landscape; margin: 0; }
+  @media print {
+    html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .toolbar { display: none; }
+    .sheets { display: block; padding: 0; }
+    .sheet-wrap { width: 297mm; break-after: page; }
+    .sheet-wrap:last-child { break-after: auto; }
+    .sheet { height: 209.5mm; aspect-ratio: auto; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="seg" role="group" aria-label="Tỉ lệ hình">
+    <button type="button" data-mode="fit" aria-pressed="true">Vừa khung</button>
+    <button type="button" data-mode="uni" aria-pressed="false">Cùng cỡ tam giác</button>
+  </div>
+  <button type="button" class="print" onclick="window.print()">In / Lưu PDF (10 trang A4)</button>
+</div>
+<main class="sheets">
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 1/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 1: ghép từ 4 tam giác"><path d="M0 0 L0 -1 L-1.73205 0Z M0 0 L0 -1 L1.73205 0Z M0 0 L0 1 L1.73205 0Z M0 0 L0 1 L-1.73205 0Z"/></svg></div><figcaption>Mẫu 1</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.1364 -1.062 2.2727 2.124" data-fit="-1.1364 -1.062 2.2727 2.124" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 2: ghép từ 4 tam giác"><path d="M0.5 0 L1 -0.86603 L-1 -0.86603Z M0.5 0 L0 0.86603 L-1 -0.86603Z M1 0.86603 L0 0.86603 L1 -0.86603Z M-1 0.86603 L0 0.86603 L-1 -0.86603Z"/></svg></div><figcaption>Mẫu 2</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.7045 -1.593 3.4091 3.1861" data-fit="-1.7045 -1.593 3.4091 3.1861" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 3: ghép từ 4 tam giác"><path d="M-1.5 -0.86603 L-0.5 -0.86603 L-1.5 0.86603Z M1 0 L1.5 -0.86603 L-0.5 -0.86603Z M1.5 0.86603 L0.5 0.86603 L1.5 -0.86603Z M-1 0 L-1.5 0.86603 L0.5 0.86603Z"/></svg></div><figcaption>Mẫu 3</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.2159 -1.1364 2.4318 2.2727" data-fit="-1.2159 -1.1364 2.4318 2.2727" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 4: ghép từ 4 tam giác"><path d="M0.5 -0.13397 L1 -1 L-1 -1Z M-0.13397 -0.5 L-1 -1 L-1 1Z M0.13397 0.5 L1 1 L1 -1Z M-0.5 0.13397 L-1 1 L1 1Z"/></svg></div><figcaption>Mẫu 4</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2689 -2.1205 4.5378 4.241" data-fit="-2.2689 -2.1205 4.5378 4.241" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 5: ghép từ 4 tam giác"><path d="M-0.5 -1.86603 L-1 -1 L1 -1Z M1.86603 -0.5 L1 -1 L1 1Z M-1.86603 0.5 L-1 1 L-1 -1Z M0.5 1.86603 L1 1 L-1 1Z"/></svg></div><figcaption>Mẫu 5</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 6: ghép từ 4 tam giác"><path d="M-1 0.86603 L0 0.86603 L-1 -0.86603Z M0.5 0 L0 0.86603 L-1 -0.86603Z M-1 0.86603 L-2 0.86603 L-1 -0.86603Z M0.5 0 L0 0.86603 L2 0.86603Z"/></svg></div><figcaption>Mẫu 6</figcaption></figure>
+      </div>
+      <span class="pageno">1/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 2/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-1.7045 -1.593 3.4091 3.1861" data-fit="-1.7045 -1.593 3.4091 3.1861" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 7: ghép từ 4 tam giác"><path d="M0.5 -0.86603 L-0.5 -0.86603 L0.5 0.86603Z M0.5 0.86603 L1.5 0.86603 L0.5 -0.86603Z M-0.5 0.86603 L0.5 0.86603 L-0.5 -0.86603Z M-0.5 0.86603 L-1.5 0.86603 L-0.5 -0.86603Z"/></svg></div><figcaption>Mẫu 7</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.106 -1.9682 4.212 3.9365" data-fit="-2.106 -1.9682 4.212 3.9365" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 8: ghép từ 4 tam giác"><path d="M0 0 L1 0 L0 -1.73205Z M0 0 L0 -1 L-1.73205 0Z M0 0 L-1 0 L0 1.73205Z M0 0 L0 1 L1.73205 0Z"/></svg></div><figcaption>Mẫu 8</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.7045 -1.593 3.4091 3.1861" data-fit="-1.7045 -1.593 3.4091 3.1861" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 9: ghép từ 4 tam giác"><path d="M-1.5 0 L-1 0.86603 L0 -0.86603Z M0 0.86603 L1 0.86603 L0 -0.86603Z M1.5 0 L1 0.86603 L0 -0.86603Z M0 0.86603 L-1 0.86603 L0 -0.86603Z"/></svg></div><figcaption>Mẫu 9</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 10: ghép từ 6 tam giác"><path d="M0 -0.86603 L-1 -0.86603 L0 0.86603Z M1 -0.86603 L0 -0.86603 L1 0.86603Z M1 -0.86603 L2 -0.86603 L1 0.86603Z M0 0.86603 L1 0.86603 L0 -0.86603Z M-1 0.86603 L0 0.86603 L-1 -0.86603Z M-1 0.86603 L-2 0.86603 L-1 -0.86603Z"/></svg></div><figcaption>Mẫu 10</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.4603 -2.2993 4.9206 4.5987" data-fit="-2.4603 -2.2993 4.9206 4.5987" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 11: ghép từ 6 tam giác"><path d="M0.43301 -1.25 L0.43301 -0.25 L-1.29904 -1.25Z M-1.29904 -1.25 L-0.43301 -0.75 L-2.16506 0.25Z M1.29904 0.25 L0.43301 0.75 L0.43301 -1.25Z M-1.29904 -0.25 L-0.43301 -0.75 L-0.43301 1.25Z M1.29904 1.25 L0.43301 0.75 L2.16506 -0.25Z M-0.43301 1.25 L-0.43301 0.25 L1.29904 1.25Z"/></svg></div><figcaption>Mẫu 11</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 12: ghép từ 6 tam giác"><path d="M0 -0.86603 L-1 -0.86603 L0 0.86603Z M0 -0.86603 L1 -0.86603 L0 0.86603Z M-1 0.86603 L0 0.86603 L-1 -0.86603Z M1 0.86603 L0 0.86603 L1 -0.86603Z M1 0.86603 L2 0.86603 L1 -0.86603Z M-1 0.86603 L-2 0.86603 L-1 -0.86603Z"/></svg></div><figcaption>Mẫu 12</figcaption></figure>
+      </div>
+      <span class="pageno">2/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 3/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 13: ghép từ 6 tam giác"><path d="M0 -0.86603 L-1 -0.86603 L0 0.86603Z M1 -0.86603 L0 -0.86603 L1 0.86603Z M0 0.86603 L1 0.86603 L0 -0.86603Z M-1 0.86603 L-2 0.86603 L-1 -0.86603Z M-1 0.86603 L0 0.86603 L-1 -0.86603Z M1 0.86603 L2 0.86603 L1 -0.86603Z"/></svg></div><figcaption>Mẫu 13</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 14: ghép từ 6 tam giác"><path d="M0.86603 -1.5 L0.86603 -0.5 L-0.86603 -1.5Z M-0.86603 -1.5 L0 -1 L-1.73205 0Z M1.73205 0 L0.86603 0.5 L0.86603 -1.5Z M-1.73205 0 L-0.86603 -0.5 L-0.86603 1.5Z M0.86603 1.5 L0 1 L1.73205 0Z M-0.86603 1.5 L-0.86603 0.5 L0.86603 1.5Z"/></svg></div><figcaption>Mẫu 14</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.4318 -2.2727 4.8636 4.5455" data-fit="-2.4318 -2.2727 4.8636 4.5455" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 15: ghép từ 6 tam giác"><path d="M-0.86603 -0.5 L0 0 L0 -2Z M0 -1 L0 0 L1.73205 -1Z M-0.86603 0.5 L0 0 L-1.73205 -1Z M0.86603 -0.5 L0 0 L1.73205 1Z M0.86603 0.5 L0 0 L0 2Z M0 1 L0 0 L-1.73205 1Z"/></svg></div><figcaption>Mẫu 15</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.106 -1.9682 4.212 3.9365" data-fit="-2.106 -1.9682 4.212 3.9365" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 16: ghép từ 6 tam giác"><path d="M-0.25 -1.73205 L0.25 -0.86603 L-1.75 -0.86603Z M1.25 -0.86603 L0.75 0 L-0.25 -1.73205Z M1.75 0 L0.75 0 L1.75 -1.73205Z M-0.75 -0.86603 L0.25 -0.86603 L-0.75 0.86603Z M0.25 0.86603 L-0.25 0 L1.75 0Z M-0.75 0.86603 L-0.25 0 L0.75 1.73205Z"/></svg></div><figcaption>Mẫu 16</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 17: ghép từ 6 tam giác"><path d="M0.5 -0.86603 L0 0 L-1 -1.73205Z M1 0 L0 0 L1 -1.73205Z M-0.5 -0.86603 L0 0 L-2 0Z M-1 0 L0 0 L-1 1.73205Z M0.5 0.86603 L0 0 L2 0Z M-0.5 0.86603 L0 0 L1 1.73205Z"/></svg></div><figcaption>Mẫu 17</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.1898 -2.9811 6.3797 5.9623" data-fit="-3.1898 -2.9811 6.3797 5.9623" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 18: ghép từ 8 tam giác"><path d="M-1.80705 0.03603 L-2.80705 0.03603 L-1.80705 -1.69603Z M-1.80705 0.03603 L-0.80705 0.03603 L-1.80705 -1.69603Z M1.075 0.03603 L1.075 -0.96397 L-0.65705 0.03603Z M1.075 0.03603 L1.075 -0.96397 L2.80705 0.03603Z M-2.67308 1.69603 L-2.67308 0.69603 L-0.94103 1.69603Z M-0.94103 0.69603 L-0.94103 1.69603 L-2.67308 0.69603Z M1.075 0.69603 L1.075 1.69603 L-0.65705 0.69603Z M1.075 1.69603 L1.075 0.69603 L2.80705 1.69603Z"/></svg></div><figcaption>Mẫu 18</figcaption></figure>
+      </div>
+      <span class="pageno">3/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 4/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-2.106 -1.9682 4.212 3.9365" data-fit="-2.106 -1.9682 4.212 3.9365" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 19: ghép từ 8 tam giác"><path d="M0 -1.73205 L1 -1.73205 L0 0Z M1 0 L0 0 L1 -1.73205Z M0 -1 L0 0 L-1.73205 -1Z M-1.73205 0 L-1.73205 -1 L0 0Z M-1 0 L0 0 L-1 1.73205Z M1.73205 0 L1.73205 1 L0 0Z M0 1 L0 0 L1.73205 1Z M0 1.73205 L-1 1.73205 L0 0Z"/></svg></div><figcaption>Mẫu 19</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 20: ghép từ 8 tam giác"><path d="M-2 -1.73205 L-1 -1.73205 L-2 0Z M0.5 -0.86603 L1 -1.73205 L-1 -1.73205Z M2 -1.73205 L1 -1.73205 L2 0Z M0.5 -0.86603 L0 0 L-1 -1.73205Z M-0.5 0.86603 L0 0 L1 1.73205Z M-2 1.73205 L-1 1.73205 L-2 0Z M2 1.73205 L1 1.73205 L2 0Z M-0.5 0.86603 L-1 1.73205 L1 1.73205Z"/></svg></div><figcaption>Mẫu 20</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.106 -1.9682 4.212 3.9365" data-fit="-2.106 -1.9682 4.212 3.9365" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 21: ghép từ 8 tam giác"><path d="M0 0 L1 0 L0 -1.73205Z M1.5 -0.86603 L1 0 L0 -1.73205Z M-0.86603 -1.5 L0 -1 L-1.73205 0Z M0 0 L0 -1 L-1.73205 0Z M0 0 L-1 0 L0 1.73205Z M0 0 L0 1 L1.73205 0Z M-1.5 0.86603 L-1 0 L0 1.73205Z M0.86603 1.5 L0 1 L1.73205 0Z"/></svg></div><figcaption>Mẫu 21</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 22: ghép từ 8 tam giác"><path d="M0 -0.5 L0 -1.5 L-1.73205 -0.5Z M0 -0.5 L0 -1.5 L1.73205 -0.5Z M0 -0.5 L0 0.5 L-1.73205 -0.5Z M0 -0.5 L0 0.5 L1.73205 -0.5Z M-1.73205 0.5 L-1.73205 -0.5 L0 0.5Z M1.73205 0.5 L1.73205 -0.5 L0 0.5Z M0 0.5 L0 1.5 L-1.73205 0.5Z M0 0.5 L0 1.5 L1.73205 0.5Z"/></svg></div><figcaption>Mẫu 22</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 23: ghép từ 8 tam giác"><path d="M-0.86603 -1 L0 -1.5 L0 0.5Z M0.86603 -1 L0 -1.5 L0 0.5Z M-0.86603 -1 L-1.73205 -0.5 L0 0.5Z M0.86603 -1 L1.73205 -0.5 L0 0.5Z M-1.73205 0.5 L-1.73205 -0.5 L0 0.5Z M1.73205 0.5 L1.73205 -0.5 L0 0.5Z M0 0.5 L0 1.5 L-1.73205 0.5Z M0 0.5 L0 1.5 L1.73205 0.5Z"/></svg></div><figcaption>Mẫu 23</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.8409 -2.6551 5.6818 5.3101" data-fit="-2.8409 -2.6551 5.6818 5.3101" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 24: ghép từ 12 tam giác"><path d="M-2 -2.16506 L-2.5 -1.29904 L-0.5 -1.29904Z M-1.5 -1.29904 L-0.5 -1.29904 L-1.5 0.43301Z M0 -0.43301 L-1 -0.43301 L0 1.29904Z M-1.5 0.43301 L-1 -0.43301 L0 1.29904Z M-1.73205 1.29904 L-1.73205 0.29904 L0 1.29904Z M-1.5 2.16506 L-2 1.29904 L0 1.29904Z M2 -2.16506 L2.5 -1.29904 L0.5 -1.29904Z M1.5 -1.29904 L0.5 -1.29904 L1.5 0.43301Z M0 -0.43301 L1 -0.43301 L0 1.29904Z M1.5 0.43301 L1 -0.43301 L0 1.29904Z M1.73205 1.29904 L1.73205 0.29904 L0 1.29904Z M1.5 2.16506 L2 1.29904 L0 1.29904Z"/></svg></div><figcaption>Mẫu 24</figcaption></figure>
+      </div>
+      <span class="pageno">4/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 5/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-2.5557 -2.3885 5.1115 4.7771" data-fit="-2.5557 -2.3885 5.1115 4.7771" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 25: ghép từ 10 tam giác"><path d="M-0.51699 -0.5 L-1.38301 0 L-1.38301 -2Z M-0.34904 -0.5 L0.51699 0 L0.51699 -2Z M1.38301 -0.5 L0.51699 0 L0.51699 -2Z M-2.24904 -0.5 L-1.38301 0 L-1.38301 -2Z M-0.34904 -0.5 L0.51699 0 L-1.21506 1Z M1.38301 -0.5 L0.51699 0 L2.24904 1Z M-0.34904 1.5 L-1.21506 1 L0.51699 0Z M1.38301 1.5 L2.24904 1 L0.51699 0Z M-0.34904 1.5 L0.51699 2 L0.51699 0Z M1.38301 1.5 L0.51699 2 L0.51699 0Z"/></svg></div><figcaption>Mẫu 25</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 26: ghép từ 10 tam giác"><path d="M0 -0.5 L0 -1.5 L-1.73205 -0.5Z M1.73205 -1.5 L1.73205 -0.5 L0 -1.5Z M0 -0.5 L0 -1.5 L1.73205 -0.5Z M0 -0.5 L0 0.5 L-1.73205 -0.5Z M-1.73205 0.5 L-1.73205 -0.5 L0 0.5Z M1.73205 -0.5 L1.73205 0.5 L0 -0.5Z M0 0.5 L0 -0.5 L1.73205 0.5Z M0 0.5 L0 1.5 L-1.73205 0.5Z M-1.73205 1.5 L-1.73205 0.5 L0 1.5Z M0 0.5 L0 1.5 L1.73205 0.5Z"/></svg></div><figcaption>Mẫu 26</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 27: ghép từ 12 tam giác"><path d="M-2 -1.73205 L-1 -1.73205 L-2 0Z M-0.5 -0.86603 L-1 -1.73205 L1 -1.73205Z M2 -1.73205 L1 -1.73205 L2 0Z M-0.5 -0.86603 L0 0 L1 -1.73205Z M1 0 L0 0 L1 -1.73205Z M-0.5 -0.86603 L0 0 L-2 0Z M-1 0 L0 0 L-1 1.73205Z M0.5 0.86603 L0 0 L2 0Z M0.5 0.86603 L0 0 L-1 1.73205Z M-2 1.73205 L-1 1.73205 L-2 0Z M2 1.73205 L1 1.73205 L2 0Z M0.5 0.86603 L1 1.73205 L-1 1.73205Z"/></svg></div><figcaption>Mẫu 27</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.4914 -2.3285 4.9829 4.6569" data-fit="-2.4914 -2.3285 4.9829 4.6569" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 28: ghép từ 12 tam giác"><path d="M-1.5 -1.54904 L-0.63397 -2.04904 L-0.63397 -0.04904Z M1.5 -1.54904 L0.63397 -2.04904 L0.63397 -0.04904Z M-2 -0.68301 L-1.5 -1.54904 L-0.5 0.18301Z M2 -0.68301 L1.5 -1.54904 L0.5 0.18301Z M-2 0.31699 L-2 -0.68301 L-0.26795 0.31699Z M2 0.31699 L2 -0.68301 L0.26795 0.31699Z M-1.5 1.18301 L-2 0.31699 L0 0.31699Z M1.5 1.18301 L2 0.31699 L0 0.31699Z M-0.86603 1.81699 L-1.73205 1.31699 L0 0.31699Z M0 2.04904 L-1 2.04904 L0 0.31699Z M0 2.04904 L1 2.04904 L0 0.31699Z M0.86603 1.81699 L1.73205 1.31699 L0 0.31699Z"/></svg></div><figcaption>Mẫu 28</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.4318 -2.2727 4.8636 4.5455" data-fit="-2.4318 -2.2727 4.8636 4.5455" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 29: ghép từ 12 tam giác"><path d="M-0.86603 -1.5 L0 -2 L0 0Z M0.86603 -1.5 L0 -2 L0 0Z M-0.86603 -1.5 L-1.73205 -1 L0 0Z M0.86603 -1.5 L1.73205 -1 L0 0Z M1.73205 0 L1.73205 -1 L0 0Z M-1.73205 0 L-1.73205 -1 L0 0Z M-1.73205 0 L-1.73205 1 L0 0Z M1.73205 0 L1.73205 1 L0 0Z M-0.86603 1.5 L-1.73205 1 L0 0Z M0.86603 1.5 L1.73205 1 L0 0Z M-0.86603 1.5 L0 2 L0 0Z M0.86603 1.5 L0 2 L0 0Z"/></svg></div><figcaption>Mẫu 29</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.4318 -2.2727 4.8636 4.5455" data-fit="-2.4318 -2.2727 4.8636 4.5455" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 30: ghép từ 12 tam giác"><path d="M0 -1 L0 -2 L1.73205 -1Z M0 -1 L0 -2 L-1.73205 -1Z M0 -1 L0 0 L-1.73205 -1Z M0 -1 L0 0 L1.73205 -1Z M-1.73205 0 L-1.73205 -1 L0 0Z M1.73205 0 L1.73205 -1 L0 0Z M-1.73205 0 L-1.73205 1 L0 0Z M1.73205 0 L1.73205 1 L0 0Z M0 1 L0 0 L-1.73205 1Z M0 1 L0 0 L1.73205 1Z M0 1 L0 2 L-1.73205 1Z M0 1 L0 2 L1.73205 1Z"/></svg></div><figcaption>Mẫu 30</figcaption></figure>
+      </div>
+      <span class="pageno">5/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 6/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-2.4318 -2.2727 4.8636 4.5455" data-fit="-2.4318 -2.2727 4.8636 4.5455" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 31: ghép từ 12 tam giác"><path d="M-0.86603 -0.5 L-1.73205 -1 L0 -2Z M-0.86603 -0.5 L0 0 L0 -2Z M0 -1 L0 -2 L1.73205 -1Z M0 -1 L0 0 L1.73205 -1Z M0.86603 -0.5 L1.73205 -1 L1.73205 1Z M-0.86603 0.5 L0 0 L-1.73205 -1Z M-0.86603 0.5 L-1.73205 1 L-1.73205 -1Z M0.86603 -0.5 L0 0 L1.73205 1Z M0 1 L0 0 L-1.73205 1Z M0.86603 0.5 L0 0 L0 2Z M0.86603 0.5 L1.73205 1 L0 2Z M0 1 L0 2 L-1.73205 1Z"/></svg></div><figcaption>Mẫu 31</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 32: ghép từ 12 tam giác"><path d="M0 -1.73205 L-1 -1.73205 L0 0Z M0 -1.73205 L1 -1.73205 L0 0Z M-1.5 -0.86603 L-1 -1.73205 L0 0Z M1.5 -0.86603 L1 -1.73205 L0 0Z M-2 0 L-1.5 -0.86603 L-0.5 0.86603Z M0 0 L0.5 0.86603 L1.5 -0.86603Z M2 0 L1.5 -0.86603 L0.5 0.86603Z M0 0 L-0.5 0.86603 L-1.5 -0.86603Z M0.5 0.86603 L1 1.73205 L2 0Z M-0.5 0.86603 L-1 1.73205 L-2 0Z M0 1.73205 L-1 1.73205 L0 0Z M0 1.73205 L1 1.73205 L0 0Z"/></svg></div><figcaption>Mẫu 32</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 33: ghép từ 12 tam giác"><path d="M-0.86603 -1.36603 L0 -1.86603 L0 0.13397Z M0.86603 -1.36603 L0 -1.86603 L0 0.13397Z M-1.5 -0.73205 L-1 -1.59808 L0 0.13397Z M1.5 -0.73205 L1 -1.59808 L0 0.13397Z M-1.73205 0.13397 L-1.73205 -0.86603 L0 0.13397Z M1.73205 0.13397 L1.73205 -0.86603 L0 0.13397Z M-1.5 1 L-2 0.13397 L0 0.13397Z M1.5 1 L2 0.13397 L0 0.13397Z M-0.86603 1.63397 L-1.73205 1.13397 L0 0.13397Z M0.86603 1.63397 L1.73205 1.13397 L0 0.13397Z M0 1.86603 L-1 1.86603 L0 0.13397Z M0 1.86603 L1 1.86603 L0 0.13397Z"/></svg></div><figcaption>Mẫu 33</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.4318 -2.2727 4.8636 4.5455" data-fit="-2.4318 -2.2727 4.8636 4.5455" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 34: ghép từ 12 tam giác"><path d="M0.86603 -1.5 L0 -2 L0 0Z M0 -1.73205 L-1 -1.73205 L0 0Z M1.5 -0.86603 L1 -1.73205 L0 0Z M-0.86603 -1.5 L-1.73205 -1 L0 0Z M1.73205 0 L1.73205 -1 L0 0Z M-1.5 -0.86603 L-2 0 L0 0Z M-1.73205 0 L-1.73205 1 L0 0Z M1.5 0.86603 L2 0 L0 0Z M-1.5 0.86603 L-1 1.73205 L0 0Z M0.86603 1.5 L1.73205 1 L0 0Z M-0.86603 1.5 L0 2 L0 0Z M0 1.73205 L1 1.73205 L0 0Z"/></svg></div><figcaption>Mẫu 34</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 35: ghép từ 12 tam giác"><path d="M0 -1.73205 L-1 -1.73205 L0 0Z M0 -1.73205 L1 -1.73205 L0 0Z M-0.86603 -1.5 L-1.73205 -1 L0 0Z M0.86603 -1.5 L1.73205 -1 L0 0Z M-1.5 -0.86603 L-2 0 L0 0Z M1.5 -0.86603 L2 0 L0 0Z M-1.5 0.86603 L-2 0 L0 0Z M1.5 0.86603 L2 0 L0 0Z M-0.86603 1.5 L-1.73205 1 L0 0Z M0 1.73205 L-1 1.73205 L0 0Z M0.86603 1.5 L1.73205 1 L0 0Z M0 1.73205 L1 1.73205 L0 0Z"/></svg></div><figcaption>Mẫu 35</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2689 -2.1205 4.5378 4.241" data-fit="-2.2689 -2.1205 4.5378 4.241" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 36: ghép từ 12 tam giác"><path d="M0.5 -1.86603 L-0.5 -1.86603 L0.5 -0.13397Z M-0.5 -1.86603 L-1.36603 -1.36603 L0.36603 -0.36603Z M1.36603 -1.36603 L0.5 -1.86603 L0.5 0.13397Z M-1.36603 -1.36603 L-1.86603 -0.5 L0.13397 -0.5Z M1.86603 -0.5 L1.36603 -1.36603 L0.36603 0.36603Z M-1.86603 -0.5 L-1.86603 0.5 L-0.13397 -0.5Z M1.86603 0.5 L1.86603 -0.5 L0.13397 0.5Z M-1.86603 0.5 L-1.36603 1.36603 L-0.36603 -0.36603Z M-1.36603 1.36603 L-0.5 1.86603 L-0.5 -0.13397Z M-0.5 1.86603 L0.5 1.86603 L-0.5 0.13397Z M0.5 1.86603 L1.36603 1.36603 L-0.36603 0.36603Z M1.36603 1.36603 L1.86603 0.5 L-0.13397 0.5Z"/></svg></div><figcaption>Mẫu 36</figcaption></figure>
+      </div>
+      <span class="pageno">6/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 7/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-2.714 -2.5364 5.4279 5.0728" data-fit="-2.714 -2.5364 5.4279 5.0728" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 37: ghép từ 12 tam giác"><path d="M-1.36603 -1.36603 L-0.86603 -0.5 L0.13397 -2.23205Z M-0.86603 -0.5 L0 0 L0 -2Z M0.5 -1.86603 L0 -1 L2 -1Z M-1.86603 0.5 L-0.86603 0.5 L-1.86603 -1.23205Z M0 -1 L0 0 L1.73205 -1Z M-0.86603 0.5 L0 0 L-1.73205 -1Z M1.86603 -0.5 L0.86603 -0.5 L1.86603 1.23205Z M0.86603 -0.5 L0 0 L1.73205 1Z M0 1 L0 0 L-1.73205 1Z M0.86603 0.5 L0 0 L0 2Z M1.36603 1.36603 L0.86603 0.5 L-0.13397 2.23205Z M-0.5 1.86603 L0 1 L-2 1Z"/></svg></div><figcaption>Mẫu 37</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.0398 -2.8409 6.0795 5.6818" data-fit="-3.0398 -2.8409 6.0795 5.6818" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 38: ghép từ 12 tam giác"><path d="M0 -2 L-0.86603 -2.5 L-0.86603 -0.5Z M1.73205 -1 L1.73205 -2 L0 -1Z M-0.86603 -0.5 L0 0 L0 -2Z M0 -1 L0 0 L1.73205 -1Z M-1.73205 -1 L-2.59808 -0.5 L-0.86603 0.5Z M-0.86603 0.5 L0 0 L-1.73205 -1Z M0.86603 -0.5 L0 0 L1.73205 1Z M1.73205 1 L2.59808 0.5 L0.86603 -0.5Z M0 1 L0 0 L-1.73205 1Z M0.86603 0.5 L0 0 L0 2Z M0 2 L0.86603 2.5 L0.86603 0.5Z M-1.73205 1 L-1.73205 2 L0 1Z"/></svg></div><figcaption>Mẫu 38</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.159 -2.9524 6.318 5.9047" data-fit="-3.159 -2.9524 6.318 5.9047" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 39: ghép từ 12 tam giác"><path d="M-0.5 -2.59808 L-1 -1.73205 L1 -1.73205Z M2 -1.73205 L1 -1.73205 L2 0Z M0.5 -0.86603 L0 0 L-1 -1.73205Z M-2.5 -0.86603 L-2 0 L-1 -1.73205Z M1 0 L0 0 L1 -1.73205Z M-0.5 -0.86603 L0 0 L-2 0Z M-1 0 L0 0 L-1 1.73205Z M0.5 0.86603 L0 0 L2 0Z M-0.5 0.86603 L0 0 L1 1.73205Z M2.5 0.86603 L2 0 L1 1.73205Z M-2 1.73205 L-1 1.73205 L-2 0Z M0.5 2.59808 L1 1.73205 L-1 1.73205Z"/></svg></div><figcaption>Mẫu 39</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 40: ghép từ 12 tam giác"><path d="M-2 -1.73205 L-1 -1.73205 L-2 0Z M0 -1.73205 L-1 -1.73205 L0 0Z M0 -1.73205 L1 -1.73205 L0 0Z M2 -1.73205 L1 -1.73205 L2 0Z M-0.13397 -0.23205 L-1 0.26795 L-1 -1.73205Z M-1.86603 -0.23205 L-1 0.26795 L-1 -1.73205Z M0.13397 0.23205 L1 -0.26795 L1 1.73205Z M1.86603 0.23205 L1 -0.26795 L1 1.73205Z M0 1.73205 L-1 1.73205 L0 0Z M0 1.73205 L1 1.73205 L0 0Z M2 1.73205 L1 1.73205 L2 0Z M-2 1.73205 L-1 1.73205 L-2 0Z"/></svg></div><figcaption>Mẫu 40</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.6728 -3.4325 7.3456 6.865" data-fit="-3.6728 -3.4325 7.3456 6.865" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 41: ghép từ 12 tam giác"><path d="M0 -2 L-0.5 -1.13397 L-1.5 -2.86603Z M1.73205 -1 L0.73205 -1 L1.73205 -2.73205Z M-0.86603 -0.5 L0 0 L0 -2Z M0 -1 L0 0 L1.73205 -1Z M-1.73205 -1 L-1.23205 -0.13397 L-3.23205 -0.13397Z M-0.86603 0.5 L0 0 L-1.73205 -1Z M0.86603 -0.5 L0 0 L1.73205 1Z M0 1 L0 0 L-1.73205 1Z M0.86603 0.5 L0 0 L0 2Z M1.73205 1 L1.23205 0.13397 L3.23205 0.13397Z M-1.73205 1 L-0.73205 1 L-1.73205 2.73205Z M0 2 L0.5 1.13397 L1.5 2.86603Z"/></svg></div><figcaption>Mẫu 41</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.4091 -3.1861 6.8182 6.3721" data-fit="-3.4091 -3.1861 6.8182 6.3721" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 42: ghép từ 12 tam giác"><path d="M0 -1.73205 L0.5 -0.86603 L1.5 -2.59808Z M-1.5 -0.86603 L-0.5 -0.86603 L-1.5 -2.59808Z M0.5 -0.86603 L0 0 L-1 -1.73205Z M1 0 L0 0 L1 -1.73205Z M-0.5 -0.86603 L0 0 L-2 0Z M1.5 -0.86603 L1 0 L3 0Z M-1.5 0.86603 L-1 0 L-3 0Z M-1 0 L0 0 L-1 1.73205Z M0.5 0.86603 L0 0 L2 0Z M-0.5 0.86603 L0 0 L1 1.73205Z M1.5 0.86603 L0.5 0.86603 L1.5 2.59808Z M0 1.73205 L-0.5 0.86603 L-1.5 2.59808Z"/></svg></div><figcaption>Mẫu 42</figcaption></figure>
+      </div>
+      <span class="pageno">7/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 8/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-3.3219 -3.1046 6.6439 6.2092" data-fit="-3.3219 -3.1046 6.6439 6.2092" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 43: ghép từ 12 tam giác"><path d="M0 -1 L1 -1 L0 -2.73205Z M-0.86603 -0.5 L0 0 L0 -2Z M-0.86603 -0.5 L-0.36603 -1.36603 L-2.36603 -1.36603Z M0.86603 -0.5 L1.36603 0.36603 L2.36603 -1.36603Z M0 -1 L0 0 L1.73205 -1Z M-0.86603 0.5 L0 0 L-1.73205 -1Z M0.86603 -0.5 L0 0 L1.73205 1Z M-0.86603 0.5 L-1.36603 -0.36603 L-2.36603 1.36603Z M0 1 L0 0 L-1.73205 1Z M0.86603 0.5 L0 0 L0 2Z M0.86603 0.5 L0.36603 1.36603 L2.36603 1.36603Z M0 1 L-1 1 L0 2.73205Z"/></svg></div><figcaption>Mẫu 43</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.4848 -3.2568 6.9697 6.5137" data-fit="-3.4848 -3.2568 6.9697 6.5137" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 44: ghép từ 12 tam giác"><path d="M-0.36603 -1.36603 L0.5 -0.86603 L0.5 -2.86603Z M-1.36603 -0.36603 L-0.5 -0.86603 L-2.23205 -1.86603Z M0.5 -0.86603 L0 0 L-1 -1.73205Z M1 0 L0 0 L1 -1.73205Z M1 -1 L1 0 L2.73205 -1Z M-0.5 -0.86603 L0 0 L-2 0Z M-1 0 L0 0 L-1 1.73205Z M0.5 0.86603 L0 0 L2 0Z M-1 1 L-1 0 L-2.73205 1Z M-0.5 0.86603 L0 0 L1 1.73205Z M1.36603 0.36603 L0.5 0.86603 L2.23205 1.86603Z M0.36603 1.36603 L-0.5 0.86603 L-0.5 2.86603Z"/></svg></div><figcaption>Mẫu 44</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.6477 -3.4091 7.2955 6.8182" data-fit="-3.6477 -3.4091 7.2955 6.8182" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 45: ghép từ 12 tam giác"><path d="M-0.86603 -1.5 L0 -1 L0 -3Z M1.5 -0.86603 L1 0 L0 -1.73205Z M0 0 L1 0 L0 -1.73205Z M-0.86603 -1.5 L0 -1 L-1.73205 0Z M0 0 L0 -1 L-1.73205 0Z M1.5 -0.86603 L1 0 L3 0Z M-1.5 0.86603 L-1 0 L-3 0Z M0 0 L-1 0 L0 1.73205Z M0 0 L0 1 L1.73205 0Z M-1.5 0.86603 L-1 0 L0 1.73205Z M0.86603 1.5 L0 1 L1.73205 0Z M0.86603 1.5 L0 1 L0 3Z"/></svg></div><figcaption>Mẫu 45</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.159 -2.9524 6.318 5.9047" data-fit="-3.159 -2.9524 6.318 5.9047" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 46: ghép từ 12 tam giác"><path d="M1 -1.73205 L0.5 -0.86603 L-0.5 -2.59808Z M-1 -1.73205 L-0.5 -0.86603 L-2.5 -0.86603Z M0.5 -0.86603 L0 0 L-1 -1.73205Z M1 0 L0 0 L1 -1.73205Z M2 0 L1 0 L2 -1.73205Z M-0.5 -0.86603 L0 0 L-2 0Z M-2 0 L-1 0 L-2 1.73205Z M-1 0 L0 0 L-1 1.73205Z M0.5 0.86603 L0 0 L2 0Z M-0.5 0.86603 L0 0 L1 1.73205Z M1 1.73205 L0.5 0.86603 L2.5 0.86603Z M-1 1.73205 L-0.5 0.86603 L0.5 2.59808Z"/></svg></div><figcaption>Mẫu 46</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.4091 -3.1861 6.8182 6.3721" data-fit="-3.4091 -3.1861 6.8182 6.3721" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 47: ghép từ 12 tam giác"><path d="M0.86603 -0.36603 L0 0.13397 L0 -1.86603Z M-0.86603 -0.36603 L0 0.13397 L0 -1.86603Z M-1.5 -0.73205 L-2 0.13397 L0 0.13397Z M1.5 -0.73205 L2 0.13397 L0 0.13397Z M-1.73205 0.13397 L-1.73205 1.13397 L0 0.13397Z M1.73205 0.13397 L1.73205 1.13397 L0 0.13397Z M-1.5 1 L-1 1.86603 L0 0.13397Z M1.5 1 L1 1.86603 L0 0.13397Z M0 1.86603 L-1 1.86603 L0 0.13397Z M0 1.86603 L1 1.86603 L0 0.13397Z M-1.5 1 L-1 1.86603 L-3 1.86603Z M1.5 1 L1 1.86603 L3 1.86603Z"/></svg></div><figcaption>Mẫu 47</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.4852 -3.2572 6.9704 6.5144" data-fit="-3.4852 -3.2572 6.9704 6.5144" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 48: ghép từ 12 tam giác"><path d="M1.06699 -0.68301 L0.06699 -0.68301 L1.06699 -2.41506Z M1.06699 -0.68301 L2.06699 -0.68301 L1.06699 -2.41506Z M0.06699 -0.68301 L1.06699 -0.68301 L0.06699 1.04904Z M1.56699 0.18301 L1.06699 -0.68301 L3.06699 -0.68301Z M1.56699 0.18301 L1.06699 -0.68301 L0.06699 1.04904Z M-0.56699 0.68301 L-1.06699 1.54904 L-2.06699 -0.18301Z M1.79904 1.04904 L1.79904 0.04904 L0.06699 1.04904Z M-0.56699 2.41506 L-1.56699 2.41506 L-0.56699 0.68301Z M-0.56699 2.41506 L0.43301 2.41506 L-0.56699 0.68301Z M0.43301 2.41506 L1.29904 1.91506 L-0.43301 0.91506Z M1.29904 1.91506 L1.79904 1.04904 L-0.20096 1.04904Z M-1.56699 2.41506 L-1.06699 1.54904 L-3.06699 1.54904Z"/></svg></div><figcaption>Mẫu 48</figcaption></figure>
+      </div>
+      <span class="pageno">8/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 9/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-2.106 -1.9682 4.212 3.9365" data-fit="-2.106 -1.9682 4.212 3.9365" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 49: ghép từ 4 tam giác"><path d="M0 -1.73205 L-1 -1.73205 L0 0Z M0 -1.73205 L1 -1.73205 L0 0Z M0 1.73205 L-1 1.73205 L0 0Z M0 1.73205 L1 1.73205 L0 0Z"/></svg></div><figcaption>Mẫu 49</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 50: ghép từ 4 tam giác"><path d="M0 0.36603 L0 1.36603 L-1.73205 0.36603Z M0 0.36603 L0 1.36603 L1.73205 0.36603Z M0 0.36603 L-1 0.36603 L0 -1.36603Z M0 0.36603 L1 0.36603 L0 -1.36603Z"/></svg></div><figcaption>Mẫu 50</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.9524 -2.7592 5.9047 5.5184" data-fit="-2.9524 -2.7592 5.9047 5.5184" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 51: ghép từ 6 tam giác"><path d="M-0.86603 0 L-0.86603 -1 L-2.59808 0Z M-0.86603 0 L-0.86603 -1 L0.86603 0Z M-0.86603 0 L-0.86603 1 L-2.59808 0Z M-0.86603 0 L-0.86603 1 L0.86603 0Z M2.59808 0 L2.59808 -1 L0.86603 0Z M2.59808 0 L2.59808 1 L0.86603 0Z"/></svg></div><figcaption>Mẫu 51</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 52: ghép từ 6 tam giác"><path d="M0 1.5 L0 0.5 L-1.73205 1.5Z M0 1.5 L0 0.5 L1.73205 1.5Z M-0.86603 0 L0 0.5 L0 -1.5Z M-0.86603 0 L0 0.5 L-1.73205 1.5Z M0.86603 0 L0 0.5 L0 -1.5Z M0.86603 0 L0 0.5 L1.73205 1.5Z"/></svg></div><figcaption>Mẫu 52</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-2.2727 -2.124 4.5455 4.2481" data-fit="-2.2727 -2.124 4.5455 4.2481" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 53: ghép từ 6 tam giác"><path d="M0 0 L-1 0 L0 -1.73205Z M0 0 L1 0 L0 -1.73205Z M-0.5 0.86603 L0 1.73205 L-2 1.73205Z M-0.5 0.86603 L-1 0 L-2 1.73205Z M0.5 0.86603 L1 0 L2 1.73205Z M0.5 0.86603 L0 1.73205 L2 1.73205Z"/></svg></div><figcaption>Mẫu 53</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-1.9682 -1.8395 3.9365 3.679" data-fit="-1.9682 -1.8395 3.9365 3.679" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 54: ghép từ 8 tam giác"><path d="M0 0 L0 -1 L-1.73205 0Z M0 0 L0 -1 L1.73205 0Z M0 0 L0 1 L-1.73205 0Z M0 0 L0 1 L1.73205 0Z M-1.73205 -1 L-1.73205 0 L0 -1Z M1.73205 -1 L1.73205 0 L0 -1Z M-1.73205 1 L-1.73205 0 L0 1Z M1.73205 1 L1.73205 0 L0 1Z"/></svg></div><figcaption>Mẫu 54</figcaption></figure>
+      </div>
+      <span class="pageno">9/10</span>
+    </section>
+  </div>
+  <div class="sheet-wrap">
+    <section class="sheet" aria-label="Trang 10/10">
+      <div class="grid">
+        <figure class="card"><div class="frame"><svg viewBox="-3.4091 -3.1861 6.8182 6.3721" data-fit="-3.4091 -3.1861 6.8182 6.3721" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 55: ghép từ 9 tam giác"><path d="M-2.5 0.43301 L-3 1.29904 L-1 1.29904Z M-0.5 0.43301 L-1 1.29904 L1 1.29904Z M1.5 0.43301 L1 1.29904 L3 1.29904Z M-2 -0.43301 L-2.5 0.43301 L-0.5 0.43301Z M0 -0.43301 L-0.5 0.43301 L1.5 0.43301Z M-1.5 -1.29904 L-2 -0.43301 L0 -0.43301Z M-1 1.29904 L-0.5 0.43301 L-2.5 0.43301Z M1 1.29904 L1.5 0.43301 L-0.5 0.43301Z M-0.5 0.43301 L0 -0.43301 L-2 -0.43301Z"/></svg></div><figcaption>Mẫu 55</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.159 -2.9524 6.318 5.9047" data-fit="-3.159 -2.9524 6.318 5.9047" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 56: ghép từ 10 tam giác"><path d="M0 -0.86603 L-1 -0.86603 L0 -2.59808Z M0 -0.86603 L1 -0.86603 L0 -2.59808Z M0 -0.86603 L-1 -0.86603 L0 0.86603Z M0 -0.86603 L1 -0.86603 L0 0.86603Z M-1 0.86603 L-2 0.86603 L-1 -0.86603Z M-1 0.86603 L0 0.86603 L-1 -0.86603Z M1 0.86603 L0 0.86603 L1 -0.86603Z M1 0.86603 L2 0.86603 L1 -0.86603Z M0.5 0.86603 L-0.5 0.86603 L0.5 2.59808Z M-0.5 2.59808 L0.5 2.59808 L-0.5 0.86603Z"/></svg></div><figcaption>Mẫu 56</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.4091 -3.1861 6.8182 6.3721" data-fit="-3.4091 -3.1861 6.8182 6.3721" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 57: ghép từ 12 tam giác"><path d="M0 0 L1 0 L0 -1.73205Z M0 0 L1 0 L0 1.73205Z M1.5 -0.86603 L1 0 L3 0Z M1.5 -0.86603 L1 0 L0 -1.73205Z M1.5 0.86603 L1 0 L3 0Z M1.5 0.86603 L1 0 L0 1.73205Z M0 0 L-1 0 L0 -1.73205Z M0 0 L-1 0 L0 1.73205Z M-1.5 -0.86603 L-1 0 L-3 0Z M-1.5 -0.86603 L-1 0 L0 -1.73205Z M-1.5 0.86603 L-1 0 L-3 0Z M-1.5 0.86603 L-1 0 L0 1.73205Z"/></svg></div><figcaption>Mẫu 57</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.9365 -3.679 7.873 7.3579" data-fit="-3.9365 -3.679 7.873 7.3579" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 58: ghép từ 12 tam giác"><path d="M0.86603 1.5 L1.73205 1 L1.73205 3Z M0.86603 1.5 L0 2 L1.73205 3Z M-0.86603 1.5 L0 2 L-1.73205 3Z M-0.86603 1.5 L-1.73205 1 L-1.73205 3Z M-1.73205 0 L-1.73205 1 L-3.4641 0Z M-1.73205 0 L-1.73205 -1 L-3.4641 0Z M-0.86603 -1.5 L-1.73205 -1 L-1.73205 -3Z M-0.86603 -1.5 L0 -2 L-1.73205 -3Z M0.86603 -1.5 L0 -2 L1.73205 -3Z M0.86603 -1.5 L1.73205 -1 L1.73205 -3Z M1.73205 0 L1.73205 -1 L3.4641 0Z M1.73205 0 L1.73205 1 L3.4641 0Z"/></svg></div><figcaption>Mẫu 58</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.6728 -3.4325 7.3456 6.865" data-fit="-3.6728 -3.4325 7.3456 6.865" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 59: ghép từ 12 tam giác"><path d="M0.23205 0 L1.23205 0 L0.23205 -1.73205Z M0.23205 0 L1.23205 0 L0.23205 1.73205Z M1.73205 -0.86603 L1.23205 0 L3.23205 0Z M1.73205 -0.86603 L1.23205 0 L0.23205 -1.73205Z M1.73205 0.86603 L1.23205 0 L3.23205 0Z M1.73205 0.86603 L1.23205 0 L0.23205 1.73205Z M-3.23205 -0.5 L-3.23205 0.5 L-1.5 -0.5Z M-1.5 0.5 L-1.5 -0.5 L-3.23205 0.5Z M0.23205 -0.5 L0.23205 0.5 L-1.5 -0.5Z M-1.5 0.5 L-1.5 -0.5 L0.23205 0.5Z M-3.23205 -0.5 L-3.23205 -1.5 L-1.5 -0.5Z M-3.23205 0.5 L-3.23205 1.5 L-1.5 0.5Z"/></svg></div><figcaption>Mẫu 59</figcaption></figure>
+        <figure class="card"><div class="frame"><svg viewBox="-3.159 -2.9524 6.318 5.9047" data-fit="-3.159 -2.9524 6.318 5.9047" data-uni="-3.7653 -3.519 7.5307 7.038" role="img" aria-label="Mẫu 60: ghép từ 12 tam giác"><path d="M0 -0.86603 L-1 -0.86603 L0 -2.59808Z M0 -0.86603 L1 -0.86603 L0 -2.59808Z M0 0.86603 L-1 0.86603 L0 -0.86603Z M0 0.86603 L1 0.86603 L0 -0.86603Z M0 0.86603 L-1 0.86603 L0 2.59808Z M0 0.86603 L1 0.86603 L0 2.59808Z M-1 -0.86603 L0 -0.86603 L-1 0.86603Z M1 -0.86603 L0 -0.86603 L1 0.86603Z M-1 2.59808 L0 2.59808 L-1 0.86603Z M1 2.59808 L0 2.59808 L1 0.86603Z M-1 2.59808 L-2 2.59808 L-1 0.86603Z M1 2.59808 L2 2.59808 L1 0.86603Z"/></svg></div><figcaption>Mẫu 60</figcaption></figure>
+      </div>
+      <span class="pageno">10/10</span>
+    </section>
+  </div>
+</main>
+<script>
+  (function () {
+    var svgs = document.querySelectorAll('svg[data-fit]');
+    var btns = document.querySelectorAll('.seg button');
+    function setMode(m) {
+      svgs.forEach(function (s) { s.setAttribute('viewBox', s.getAttribute('data-' + m)); });
+      btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === m)); });
+    }
+    btns.forEach(function (b) { b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); }); });
+  })();
+</script>
+<script src="../assets/back.js"></script>
+</body>
+</html>
