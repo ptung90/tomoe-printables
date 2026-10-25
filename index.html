@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Học liệu TOMOE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+<style>
+/* Layout: masthead + search bar, subject chips, then a responsive shelf of page cards */
+:root{
+  --bg:#F2F5F1; --paper:#FFFFFF; --ink:#1D3331; --ink2:#566C69; --line:#D6E1DB;
+  --accent:#D95F43; --sea:#2F7D8A; --chip:#E6EFEA; --mark:#FCE7A6;
+  --f-display:"Baloo 2","Be Vietnam Pro",system-ui,sans-serif;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#111C1B; --paper:#192827; --ink:#E8F1ED; --ink2:#A2B8B2; --line:#2C4241;
+  --accent:#F0765A; --sea:#5DB2BE; --chip:#22403B; --mark:#6B5A1C; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 56px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.mast{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:600}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.count{color:var(--ink2);font-size:14px;font-variant-numeric:tabular-nums}
+.search{position:relative}
+.search input{width:100%;font:500 17px var(--f-body);color:var(--ink);background:var(--paper);border:1.5px solid var(--line);
+  border-radius:14px;padding:14px 16px 14px 46px;outline:none}
+.search input:focus{border-color:var(--sea);box-shadow:0 0 0 4px color-mix(in srgb,var(--sea) 18%,transparent)}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;fill:none;stroke:var(--ink2);stroke-width:2}
+.search kbd{position:absolute;right:14px;top:50%;transform:translateY(-50%);font:600 12px var(--f-body);color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:600 14px var(--f-body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.chip:hover{border-color:var(--sea)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:focus-visible,.card:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:start;text-decoration:none;color:inherit;
+  background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);border-color:var(--sea)}
+.tile{width:64px;height:64px;border-radius:14px;display:grid;place-items:center;font-size:34px;background:var(--chip)}
+.card .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--ink2)}
+.card .subj{font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sea)}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:19px;line-height:1.2;margin:2px 0 4px;text-wrap:balance}
+.card p{margin:0;font-size:14px;color:var(--ink2)}
+.card .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.card .tags span{font-size:12px;background:var(--chip);border-radius:6px;padding:1px 8px}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.empty{color:var(--ink2);text-align:center;padding:32px 0}
+footer{color:var(--ink2);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mast">
+    <div>
+      <div class="eyebrow">Tiểu học TOMOE</div>
+      <h1>Học liệu <em>in &amp; chơi</em></h1>
+    </div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <label class="search" for="q">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+    <input id="q" type="search" placeholder="Tìm theo tên, môn, từ khoá… (gõ không dấu cũng được)" autocomplete="off">
+    <kbd>/</kbd>
+  </label>
+
+  <div class="chips" id="chips" aria-label="Lọc theo môn"></div>
+  <div class="shelf" id="shelf"></div>
+  <div class="empty" id="empty" hidden>Không có trang nào khớp. Thử từ khoá khác hoặc chọn “Tất cả”.</div>
+
+  <footer>Mỗi trang là một thư mục riêng trong repo. Thêm trang mới: tạo thư mục, rồi thêm một mục vào <code>pages.js</code>.</footer>
+</div>
+
+<script src="pages.js"></script>
+<script>
+(function(){
+  const pages=(window.PAGES||[]).slice().sort((a,b)=>b.updated.localeCompare(a.updated));
+  const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const subjects=['Tất cả',...new Set(pages.map(p=>p.subject))];
+  let subj='Tất cả';
+  const q=document.getElementById('q');
+  try{const s=new URLSearchParams(location.search);if(s.get('q'))q.value=s.get('q');if(s.get('mon'))subj=s.get('mon');}catch(e){}
+
+  const chips=document.getElementById('chips');
+  subjects.forEach(s=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=s;
+    b.addEventListener('click',()=>{subj=s;render();});chips.appendChild(b);});
+
+  // highlight matches in original text, accent-insensitive
+  function hl(text,terms){
+    if(!terms.length)return esc(text);
+    const n=norm(text);const marks=new Array(text.length).fill(false);
+    terms.forEach(t=>{let i=n.indexOf(t);while(t&&i>-1){for(let k=i;k<i+t.length;k++)marks[k]=true;i=n.indexOf(t,i+t.length);}});
+    let out='',open=false;
+    for(let i=0;i<text.length;i++){if(marks[i]&&!open){out+='<mark>';open=true;}if(!marks[i]&&open){out+='</mark>';open=false;}out+=esc(text[i]);}
+    return out+(open?'</mark>':'');
+  }
+
+  function render(){
+    chips.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',String(b.textContent===subj)));
+    const terms=norm(q.value).split(/\s+/).filter(Boolean);
+    const list=pages.filter(p=>{
+      if(subj!=='Tất cả'&&p.subject!==subj)return false;
+      const hay=norm([p.title,p.desc,p.subject,...p.tags].join(' '));
+      return terms.every(t=>hay.includes(t));
+    });
+    document.getElementById('shelf').innerHTML=list.map(p=>`
+      <a class="card" href="${esc(p.path)}">
+        <div class="tile" aria-hidden="true">${p.icon||'📄'}</div>
+        <div>
+          <div class="meta"><span class="subj">${hl(p.subject,terms)}</span><span>· cập nhật ${p.updated.split('-').reverse().join('/')}</span></div>
+          <h2>${hl(p.title,terms)}</h2>
+          <p>${hl(p.desc,terms)}</p>
+          <div class="tags">${p.tags.map(t=>`<span>${hl(t,terms)}</span>`).join('')}</div>
+        </div>
+      </a>`).join('');
+    document.getElementById('empty').hidden=list.length>0;
+    document.getElementById('count').textContent=list.length===pages.length?`${pages.length} trang`:`${list.length} / ${pages.length} trang`;
+    try{const s=new URLSearchParams();if(q.value)s.set('q',q.value);if(subj!=='Tất cả')s.set('mon',subj);
+      history.replaceState(null,'',location.pathname+(s.toString()?'?'+s:''));}catch(e){}
+  }
+  q.addEventListener('input',render);
+  document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus();}
+    if(e.key==='Enter'&&document.activeElement===q){const a=document.querySelector('.card');if(a)location.href=a.href;}});
+  render();
+})();
+</script>
+</body>
+</html>
