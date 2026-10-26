@@ -22,11 +22,11 @@ window.PAGES = [
   {
     path: "dien-tich-hinh-tron/",
     title: "Diện tích hình tròn – mẫu cắt ghép",
-    desc: "2 tờ A4 in trên giấy màu: hình tròn bán kính 5 cm chia 8/10/12/16 hình quạt và dải 15,7 × 5 cm để xếp các hình quạt thành hình chữ nhật. In tỉ lệ 100%, chỉ ra nét đứt.",
+    desc: "2 tờ cắt in trên giấy màu (hình tròn r = 5 cm chia 8/10/12/16 hình quạt, dải 15,7 × 5 cm có mép dán) và 1 tờ hướng dẫn 9 bước để trẻ tự ghép thành hình chữ nhật, tìm ra S = π × r². In từng tờ, tỉ lệ 100%.",
     subject: "Toán",
-    tags: ["hình tròn", "diện tích", "số pi", "hình quạt", "cắt ghép", "giấy màu", "A4"],
+    tags: ["hình tròn", "diện tích", "số pi", "hình quạt", "cắt ghép", "giấy màu", "hướng dẫn", "A4"],
     icon: "🍕",
-    updated: "2026-10-23"
+    updated: "2026-10-26"
   },
   {
     path: "so-do-phan-loai-thuc-vat/",

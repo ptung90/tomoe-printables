@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diện tích hình tròn – mẫu cắt trên giấy màu (A4)</title>
+<title>Diện tích hình tròn – mẫu cắt giấy màu và tờ hướng dẫn (A4)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #1f2933;
@@ -19,27 +19,48 @@
   html, body { margin: 0; background: var(--bg); color: var(--ink); }
   body { font-family: "Be Vietnam Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
 
-  /* Thanh công cụ – chỉ hiện trên màn hình */
+  /* ---------- Thanh công cụ – chỉ hiện trên màn hình ---------- */
   .toolbar { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 10px 20px; background: rgba(232, 236, 240, .94); border-bottom: 1px solid var(--border); backdrop-filter: blur(6px); }
   .toolbar .name { font-weight: 600; font-size: 14px; margin-right: auto; }
   .ctl { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
-  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; background: var(--card); padding: 2px; }
+  .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 8px; background: var(--card); padding: 2px; }
   .seg button { font: inherit; font-size: 13px; border: 0; background: transparent; color: var(--muted); padding: 5px 11px; border-radius: 6px; cursor: pointer; }
   .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-  .print { font: inherit; font-size: 13px; border: 1px solid var(--ink); background: var(--ink); color: #fff; border-radius: 8px; padding: 7px 14px; cursor: pointer; }
-  .print:hover, .seg button:hover { filter: brightness(.96); }
+  .seg.print-btns button { color: var(--ink); }
+  .seg button:hover { background: #eef1f4; }
+  .seg button[aria-pressed="true"]:hover { background: var(--ink); }
   .hint { width: 100%; margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
   @media (max-width: 720px) { .toolbar .name { width: 100%; } }
 
-  /* Tờ A4 */
+  /* ---------- Tờ A4 ---------- */
   .sheets { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 24px 16px 56px; }
   .sheet { display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .sheet-label { width: 210mm; max-width: 100%; font-size: 13px; line-height: 1.45; color: var(--muted); }
   .sheet-label b { color: var(--ink); font-weight: 600; }
   .page { position: relative; flex: none; width: 210mm; height: 297mm; background: var(--paper, #fff); overflow: hidden; box-shadow: 0 1px 2px rgba(16, 24, 40, .08), 0 10px 30px rgba(16, 24, 40, .10); }
-  .page svg { position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; }
+  .page svg.art { position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; }
+  .page svg { display: block; font-family: "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif; }
 
-  /* In: chỉ ra nét đứt, không nền, không chữ */
+  /* ---------- Tờ hướng dẫn cho trẻ (1 trang) ---------- */
+  .ph { position: absolute; top: 12mm; left: 15mm; right: 15mm; }
+  .ph .over { font-size: 8.5pt; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .ph h2 { margin: 1.2mm 0 0; font-size: 22pt; line-height: 1.15; font-weight: 700; letter-spacing: -.01em; }
+  .ph p { margin: 1.6mm 0 0; font-size: 12pt; line-height: 1.4; }
+  .ph p.need { margin-top: 3mm; padding: 1.8mm 3.6mm; border-radius: 1.8mm; background: #f4f6f8; border: .3mm solid var(--border); font-size: 10.5pt; }
+  .ph b, .kbody b { font-weight: 600; }
+  .kbody { position: absolute; top: 47.5mm; left: 15mm; right: 15mm; bottom: 10mm; font-size: 11.5pt; line-height: 1.42; }
+  .kstep { display: grid; grid-template-columns: 7.5mm 1fr auto; column-gap: 4mm; align-items: start; margin: 0 0 3mm; }
+  .kstep .n { width: 7.2mm; height: 7.2mm; border-radius: 50%; background: var(--ink); color: #fff; font-size: 10.5pt; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  .kstep .t { padding-top: .7mm; }
+  .rec { margin-top: 1.8mm; padding: 2.4mm 4mm; border: .35mm dashed #8a96a3; border-radius: 2mm; }
+  .rec p { margin: 0 0 1.2mm; font-weight: 600; line-height: 8.2mm; }
+  .blank { display: inline-block; height: 8mm; border: .35mm solid #8a96a3; border-radius: 1.2mm; vertical-align: middle; margin: 0 1mm; background: #fff; }
+  .blank.s { width: 13mm; } .blank.m { width: 26mm; } .blank.l { width: 52mm; }
+  .kstep p.ln { margin: 0 0 1.2mm; line-height: 8.2mm; }
+  .kstep p.ln:last-child { margin-bottom: 0; }
+  .rec p:last-child { margin: 0; }
+
+  /* ---------- In ---------- */
   @page { size: A4 portrait; margin: 0; }
   @media print {
     html, body { background: transparent; }
@@ -47,13 +68,18 @@
     .sheets { display: block; padding: 0; zoom: 1 !important; }
     .sheet { display: block; }
     .sheet + .sheet { break-before: page; }
-    .page { box-shadow: none; background: transparent !important; }
+    .page { box-shadow: none; }
+    .page.paper { background: transparent !important; }
+    .guide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body[data-print="1"] .sheet:not([data-k="1"]),
+    body[data-print="2"] .sheet:not([data-k="2"]),
+    body[data-print="g"] .sheet:not([data-k="g"]) { display: none; }
   }
 </style>
 </head>
 <body>
 <div class="toolbar">
-  <div class="name">Diện tích hình tròn · mẫu cắt trên giấy màu (A4)</div>
+  <div class="name">Diện tích hình tròn · mẫu cắt giấy màu + tờ hướng dẫn (A4)</div>
   <div class="ctl">Số hình quạt
     <div class="seg" id="segN" role="group" aria-label="Số hình quạt mỗi hình tròn">
       <button type="button" data-v="8">8</button>
@@ -62,8 +88,15 @@
       <button type="button" data-v="16">16</button>
     </div>
   </div>
-  <button type="button" class="print" onclick="window.print()">In / Lưu PDF</button>
-  <p class="hint">Tờ 1 in trên giấy màu thứ nhất, tờ 2 in trên giấy màu thứ hai · khổ A4 · tỉ lệ 100% (không chọn “Vừa trang / Fit”). Màu nền trên màn hình chỉ để xem trước — khi in chỉ ra nét đứt.</p>
+  <div class="ctl">In
+    <div class="seg print-btns" role="group" aria-label="Chọn trang để in">
+      <button type="button" data-print="1">Tờ 1 · giấy cam</button>
+      <button type="button" data-print="2">Tờ 2 · giấy xanh lá</button>
+      <button type="button" data-print="g">Tờ hướng dẫn · giấy trắng</button>
+      <button type="button" data-print="all">Tất cả</button>
+    </div>
+  </div>
+  <p class="hint">Bấm nút để in riêng lên đúng loại giấy · khổ A4 · tỉ lệ 100% (không chọn “Vừa trang / Fit”). Màu nền của tờ 1–2 trên màn hình chỉ để xem trước — khi in chỉ ra nét cắt.</p>
 </div>
 
 <main class="sheets" id="sheets"></main>
@@ -74,22 +107,18 @@
 
   /* ===== Thông số (mm) ===== */
   var NS = 'http://www.w3.org/2000/svg';
-  var R = 50;            // bán kính 5 cm
-  var STRIP_W = 157;     // nửa chiều dài: 31,4 cm : 2 = 15,7 cm
-  var STRIP_H = 50;      // chiều rộng = bán kính 5 cm
-  var DASH = 2.4, GAP = 1.6;   // nét đứt
+  var R = 50;              // bán kính 5 cm
+  var LEN = 314;           // chu vi 31,4 cm
+  var STRIP_W = LEN / 2;   // mỗi dải 15,7 cm
+  var STRIP_H = R;         // rộng 5 cm
+  var TAB = 10, TAB_IN = 2;            // mép dán rộng 1 cm, vát góc 2 mm
+  var DASH = 2.4, GAP = 1.6;           // nét cắt
   var LINE = 0.4, CUT = '#1a1a1a';
+  var CAM = '#EA7430', XANH = '#5E9E47', INK = '#1f2933';
 
-  // vị trí trên tờ A4 (căn giữa theo chiều dọc)
+  // vị trí trên tờ cắt
   var CX = 105, CY = 84.5;
-  var SX = (210 - STRIP_W) / 2, SY1 = 152.5, SY2 = 212.5;
-
-  var SHEETS = [
-    { paper: '#F6BE95', halve: true,
-      label: function (n) { return '<b>Tờ 1 · giấy màu thứ nhất</b> (vd. cam): hình tròn chia ' + n + ' hình quạt, có thêm 1 nét cắt đôi hình quạt trên cùng → ' + (n - 1) + ' hình quạt + 2 nửa. Hai dải 15,7 × 5 cm nối lại thành hình chữ nhật 31,4 × 5 cm.'; } },
-    { paper: '#BFDDAE', halve: false,
-      label: function (n) { return '<b>Tờ 2 · giấy màu thứ hai</b> (vd. xanh lá): hình tròn chia ' + n + ' hình quạt. Hai dải 15,7 × 5 cm nối lại thành hình chữ nhật 31,4 × 5 cm.'; } }
-  ];
+  var SX = (210 - STRIP_W - TAB) / 2, SY1 = 152.5, SY2 = 212.5;
 
   var state = { n: 10 };
 
@@ -100,8 +129,16 @@
     if (parent) parent.appendChild(e);
     return e;
   }
+  function ext(a, b) { var o = {}, k; for (k in a) o[k] = a[k]; for (k in b) o[k] = b[k]; return o; }
+  function T(svg, x, y, s, a) { var t = el('text', ext({ x: f(x), y: f(y) }, a), svg); t.textContent = s; return t; }
+  function head(g, x, y, dx, dy, color, L, W) {
+    var bx = x - dx * L, by = y - dy * L, px = -dy * W, py = dx * W;
+    el('path', { d: 'M' + f(x) + ' ' + f(y) + 'L' + f(bx + px) + ' ' + f(by + py) + 'L' + f(bx - px) + ' ' + f(by - py) + 'Z', fill: color }, g);
+  }
+  var WL = { fill: '#fff', 'font-weight': 700, 'text-anchor': 'middle', 'dominant-baseline': 'central' };
+  var DK = { fill: INK, 'font-weight': 600, 'text-anchor': 'middle', 'dominant-baseline': 'central' };
 
-  // nét đứt bắt đầu và kết thúc bằng 1 gạch → góc và tâm đều có nét
+  /* ===== Nét cắt ===== */
   function dashLine(g, x1, y1, x2, y2) {
     var L = Math.hypot(x2 - x1, y2 - y1);
     var k = Math.max(1, Math.round((L - DASH) / (DASH + GAP)));
@@ -111,49 +148,230 @@
     var k = Math.round(2 * Math.PI * r / (DASH + GAP));
     el('circle', { cx: cx, cy: cy, r: r, pathLength: f(k * (DASH + GAP)), 'stroke-dasharray': DASH + ' ' + GAP }, g);
   }
-  function dashRect(g, x, y, w, h) {
-    dashLine(g, x, y, x + w, y);
-    dashLine(g, x + w, y, x + w, y + h);
-    dashLine(g, x + w, y + h, x, y + h);
-    dashLine(g, x, y + h, x, y);
+  function dotLine(g, x1, y1, x2, y2) {
+    el('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), 'stroke-dasharray': '0.01 1.3', 'stroke-linecap': 'round', 'stroke-width': 0.5 }, g);
   }
+  function hatch(defs, id, size, color, w) {
+    var pat = el('pattern', { id: id, width: size, height: size, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    el('line', { x1: 0, y1: 0, x2: 0, y2: size, stroke: color, 'stroke-width': w }, pat);
+  }
+
+  // dải 15,7 × 5 cm; withTab: thêm mép dán hình thang ở đầu phải
+  function strip(g, defs, x, y, withTab, k, ticks) {
+    var w = STRIP_W, h = STRIP_H;
+    (ticks || []).forEach(function (tx) {
+      el('line', { x1: f(x + tx), y1: f(y), x2: f(x + tx), y2: f(y + 3) }, g);
+      el('line', { x1: f(x + tx), y1: f(y + h - 3), x2: f(x + tx), y2: f(y + h) }, g);
+    });
+    if (!withTab) {
+      dashLine(g, x, y, x + w, y); dashLine(g, x + w, y, x + w, y + h);
+      dashLine(g, x + w, y + h, x, y + h); dashLine(g, x, y + h, x, y);
+      return;
+    }
+    var pid = 'hatch-tab-' + k;
+    hatch(defs, pid, 2.2, '#7d8791', 0.25);
+    var xr = x + w, xt = x + w + TAB;
+    el('path', { d: 'M' + f(xr) + ' ' + f(y) + 'L' + f(xt) + ' ' + f(y + TAB_IN) + 'L' + f(xt) + ' ' + f(y + h - TAB_IN) + 'L' + f(xr) + ' ' + f(y + h) + 'Z', fill: 'url(#' + pid + ')', stroke: 'none' }, g);
+    dashLine(g, x, y, xr, y);
+    dashLine(g, xr, y, xt, y + TAB_IN);
+    dashLine(g, xt, y + TAB_IN, xt, y + h - TAB_IN);
+    dashLine(g, xt, y + h - TAB_IN, xr, y + h);
+    dashLine(g, xr, y + h, x, y + h);
+    dashLine(g, x, y + h, x, y);
+    dotLine(g, xr, y, xr, y + h);
+  }
+
+  /* ===== Tờ cắt (giấy màu) ===== */
+  var SHEETS = [
+    { k: '1', paper: '#F6BE95', halve: true,
+      label: function (n) { return '<b>Tờ 1 · in trên giấy cam</b> — hình tròn chia ' + n + ' hình quạt, thêm 1 nét cắt đôi hình quạt trên cùng (→ ' + (n - 1) + ' hình quạt + 2 nửa). Hai dải 15,7 × 5 cm dán nối bằng mép dán → hình chữ nhật 31,4 × 5 cm.'; } },
+    { k: '2', paper: '#BFDDAE', halve: false,
+      ticks: { a: [50, 100, 150], b: [STRIP_W - 150, STRIP_W - 100, STRIP_W - 50] },
+      label: function (n) { return '<b>Tờ 2 · in trên giấy xanh lá</b> — hình tròn chia ' + n + ' hình quạt. Hai dải 15,7 × 5 cm dán nối bằng mép dán → hình chữ nhật 31,4 × 5 cm. Vạch mốc ngắn ở hai mép, cách 5 cm (= r) tính từ hai đầu, để trẻ nối thành ô vuông r × r.'; } }
+  ];
 
   var sheetsEl = document.getElementById('sheets');
 
-  function buildSheet(spec, n, idx) {
+  function wrapSheet(k, labelHTML) {
     var wrap = document.createElement('div');
     wrap.className = 'sheet';
+    wrap.setAttribute('data-k', k);
     var lab = document.createElement('div');
     lab.className = 'sheet-label';
-    lab.innerHTML = spec.label(n);
+    lab.innerHTML = labelHTML;
     wrap.appendChild(lab);
-    var sec = document.createElement('section');
-    sec.className = 'page';
-    sec.style.setProperty('--paper', spec.paper);
-    var svg = el('svg', { viewBox: '0 0 210 297', width: '210mm', height: '297mm', role: 'img', 'aria-label': 'Tờ ' + (idx + 1) + ': hình tròn chia ' + n + ' hình quạt và 2 dải hình chữ nhật, nét đứt để cắt' });
-    var g = el('g', { fill: 'none', stroke: CUT, 'stroke-width': LINE, 'stroke-linecap': 'butt' }, svg);
+    sheetsEl.appendChild(wrap);
+    return wrap;
+  }
 
-    // hình tròn r = 5 cm, chia n hình quạt (hình quạt đầu tiên nằm chính giữa phía trên)
+  function buildCutSheet(spec, n) {
+    var wrap = wrapSheet(spec.k, spec.label(n));
+    var sec = document.createElement('section');
+    sec.className = 'page paper';
+    sec.style.setProperty('--paper', spec.paper);
+    var svg = el('svg', { 'class': 'art', viewBox: '0 0 210 297', width: '210mm', height: '297mm', role: 'img', 'aria-label': 'Tờ ' + spec.k + ': hình tròn chia ' + n + ' hình quạt và 2 dải hình chữ nhật, nét đứt để cắt' });
+    var defs = el('defs', null, svg);
+    var g = el('g', { fill: 'none', stroke: CUT, 'stroke-width': LINE, 'stroke-linecap': 'butt' }, svg);
     dashCircle(g, CX, CY, R);
     var step = 360 / n, rad = Math.PI / 180;
     for (var k = 0; k < n; k++) {
       var a = (-90 - step / 2 + k * step) * rad;
-      dashLine(g, CX + R * Math.cos(a), CY + R * Math.sin(a), CX, CY);   // từ mép vào tâm
+      dashLine(g, CX + R * Math.cos(a), CY + R * Math.sin(a), CX, CY);
     }
-    if (spec.halve) dashLine(g, CX, CY - R, CX, CY);                      // nét cắt đôi hình quạt trên cùng
-
-    // 2 nửa hình chữ nhật 15,7 × 5 cm
-    dashRect(g, SX, SY1, STRIP_W, STRIP_H);
-    dashRect(g, SX, SY2, STRIP_W, STRIP_H);
-
+    if (spec.halve) dashLine(g, CX, CY - R, CX, CY);
+    strip(g, defs, SX, SY1, true, spec.k, spec.ticks && spec.ticks.a);
+    strip(g, defs, SX, SY2, false, spec.k, spec.ticks && spec.ticks.b);
     sec.appendChild(svg);
     wrap.appendChild(sec);
-    sheetsEl.appendChild(wrap);
   }
 
+  /* ===== Hình minh hoạ cho tờ hướng dẫn ===== */
+  function svgBox(w, h, aria) {
+    return el('svg', { viewBox: '0 0 ' + f(w) + ' ' + f(h), width: f(w) + 'mm', height: f(h) + 'mm', role: 'img', 'aria-label': aria });
+  }
+
+  // bước 1: các mảnh có được sau khi cắt
+  function figPieces(n) {
+    var s = 0.22, th = Math.PI / n, hc = R * Math.sin(th) * s, ch = R * Math.cos(th) * s, r = R * s;
+    var svg = svgBox(62, 15, 'Một hình quạt, một nửa hình quạt và một dải giấy');
+    var y0 = 1.5, x = 1;
+    // hình quạt
+    el('path', { d: 'M' + f(x + hc) + ' ' + f(y0) + 'L' + f(x) + ' ' + f(y0 + ch) + 'A' + f(r) + ' ' + f(r) + ' 0 0 0 ' + f(x + 2 * hc) + ' ' + f(y0 + ch) + 'Z', fill: XANH }, svg);
+    // nửa hình quạt
+    x = 2 * hc + 4;
+    el('path', { d: 'M' + f(x) + ' ' + f(y0) + 'L' + f(x) + ' ' + f(y0 + r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 0 ' + f(x + hc) + ' ' + f(y0 + ch) + 'Z', fill: CAM }, svg);
+    // dải giấy có mép dán
+    x = 3 * hc + 8;
+    var w = 30, h = STRIP_H * s, tb = 2.2;
+    el('rect', { x: f(x), y: f(y0 + 0.5), width: w, height: f(h), fill: CAM }, svg);
+    var defs = el('defs', null, svg);
+    hatch(defs, 'kid-hatch-a', 1.2, '#8a96a3', 0.3);
+    el('path', { d: 'M' + f(x + w) + ' ' + f(y0 + 0.5) + 'l' + tb + ' .45V' + f(y0 + 0.5 + h - 0.45) + 'l-' + tb + ' .45Z', fill: 'url(#kid-hatch-a)', stroke: '#8a96a3', 'stroke-width': 0.2 }, svg);
+    return svg;
+  }
+
+  // bước 2: dán 2 dải thành 1 dải dài
+  function figJoin() {
+    var s = 0.2, w = STRIP_W * s, h = STRIP_H * s, tb = TAB * s, ti = TAB_IN * s;
+    var svg = svgBox(72, 2 * h + 7.2, 'Dán hai dải giấy bằng mép dán thành một dải dài 31,4 cm');
+    var defs = el('defs', null, svg);
+    hatch(defs, 'kid-hatch-b', 1.2, '#8a96a3', 0.3);
+    var y1 = 0.6;
+    el('rect', { x: 0.5, y: y1, width: f(w), height: f(h), fill: CAM }, svg);
+    el('path', { d: 'M' + f(0.5 + w) + ' ' + f(y1) + 'L' + f(0.5 + w + tb) + ' ' + f(y1 + ti) + 'L' + f(0.5 + w + tb) + ' ' + f(y1 + h - ti) + 'L' + f(0.5 + w) + ' ' + f(y1 + h) + 'Z', fill: 'url(#kid-hatch-b)', stroke: '#8a96a3', 'stroke-width': 0.2 }, svg);
+    T(svg, 0.5 + w + tb + 2.6, y1 + h / 2, '+', ext(DK, { 'font-size': 5 }));
+    el('rect', { x: f(0.5 + w + tb + 5.2), y: y1, width: f(w), height: f(h), fill: CAM }, svg);
+    var y2 = y1 + h + 6.2;
+    el('line', { x1: f(0.5 + w), y1: f(y1 + h + 1), x2: f(0.5 + w), y2: f(y2 - 1.8), stroke: INK, 'stroke-width': 0.35 }, svg);
+    head(svg, 0.5 + w, y2 - 0.7, 0, 1, INK, 1.4, 0.9);
+    el('rect', { x: 0.5, y: f(y2), width: f(2 * w), height: f(h), fill: CAM }, svg);
+    T(svg, 0.5 + w, y2 + h / 2, 'dài 31,4 cm', ext(WL, { 'font-size': 3.2 }));
+    return svg;
+  }
+
+  // vẽ cách xếp hình quạt (toạ độ thật, mm)
+  function drawArrangement(g, n, showCam, showHalves) {
+    var th = Math.PI / n, hc = R * Math.sin(th), ch = R * Math.cos(th), Wt = 2 * hc * n, k, ax;
+    for (k = 0; k < n; k++) {
+      ax = hc + 2 * hc * k;
+      el('path', { d: 'M' + f(ax) + ' 0L' + f(ax - hc) + ' ' + f(ch) + 'A' + R + ' ' + R + ' 0 0 0 ' + f(ax + hc) + ' ' + f(ch) + 'Z', fill: XANH }, g);
+    }
+    if (showCam) for (k = 0; k < n - 1; k++) {
+      ax = 2 * hc + 2 * hc * k;
+      el('path', { d: 'M' + f(ax) + ' ' + f(ch) + 'L' + f(ax - hc) + ' 0A' + R + ' ' + R + ' 0 0 1 ' + f(ax + hc) + ' 0Z', fill: CAM }, g);
+    }
+    if (showHalves) {
+      el('path', { d: 'M0 ' + f(ch) + 'L0 ' + f(ch - R) + 'A' + R + ' ' + R + ' 0 0 1 ' + f(hc) + ' 0Z', fill: CAM }, g);
+      el('path', { d: 'M' + f(Wt) + ' ' + f(ch) + 'L' + f(Wt - hc) + ' 0A' + R + ' ' + R + ' 0 0 1 ' + f(Wt) + ' ' + f(ch - R) + 'Z', fill: CAM }, g);
+    }
+  }
+  function arrangeSVG(n, s, showCam, showHalves) {
+    var th = Math.PI / n, ch = R * Math.cos(th), Wt = 2 * R * Math.sin(th) * n;
+    var top = ch - R, H = 2 * R - ch;
+    var svg = el('svg', { viewBox: f(-1) + ' ' + f(top - 1) + ' ' + f(Wt + 2) + ' ' + f(H + 2), width: f((Wt + 2) * s) + 'mm', height: f((H + 2) * s) + 'mm', role: 'img', 'aria-label': 'Cách xếp các hình quạt' });
+    var g = el('g', { stroke: '#fff', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, svg);
+    drawArrangement(g, n, showCam, showHalves);
+    return svg;
+  }
+  // bước 6: hình vừa xếp và hình chữ nhật cam
+  function figCompare(n) {
+    var s = 0.22, th = Math.PI / n, ch = R * Math.cos(th), Wt = 2 * R * Math.sin(th) * n;
+    var Ha = (2 * R - ch) * s, w = LEN * s, h = R * s, gap = 2.4;
+    var svg = svgBox(w + 7, Ha + gap + h + 0.5, 'Hình vừa xếp và hình chữ nhật cam gần bằng nhau');
+    var g = el('g', { transform: 'translate(' + f((LEN - Wt) / 2 * s) + ' ' + f((R - ch) * s) + ') scale(' + s + ')', stroke: '#fff', 'stroke-width': 1.4, 'stroke-linejoin': 'round' }, svg);
+    drawArrangement(g, n, true, true);
+    var y = Ha + gap;
+    el('rect', { x: 0, y: f(y), width: f(w), height: f(h), fill: CAM }, svg);
+    T(svg, w / 2, y + h / 2, 'dài = chu vi', ext(WL, { 'font-size': 3.1 }));
+    el('line', { x1: f(w + 2.2), y1: f(y + 0.4), x2: f(w + 2.2), y2: f(y + h - 0.4), stroke: INK, 'stroke-width': 0.3 }, svg);
+    T(svg, w + 4.8, y + h / 2, 'r', ext(DK, { 'font-size': 3.6 }));
+    return svg;
+  }
+
+  // bước 8: nối các vạch mốc trên hình chữ nhật xanh lá
+  function figTicks() {
+    var s = 0.2, w = LEN * s, h = R * s, x0 = 0.5, y0 = 0.5, t = 1.3;
+    var svg = svgBox(w + 1, h + 1, 'Nối các vạch mốc trên hình chữ nhật xanh lá');
+    el('rect', { x: x0, y: y0, width: f(w), height: f(h), fill: XANH }, svg);
+    el('line', { x1: f(x0 + w / 2), y1: y0, x2: f(x0 + w / 2), y2: f(y0 + h), stroke: '#fff', 'stroke-width': 0.3, 'stroke-dasharray': '0.7 0.5' }, svg);
+    [50, 100, 150, LEN - 150, LEN - 100, LEN - 50].forEach(function (x) {
+      el('line', { x1: f(x0 + x * s), y1: y0, x2: f(x0 + x * s), y2: f(y0 + t), stroke: INK, 'stroke-width': 0.35 }, svg);
+      el('line', { x1: f(x0 + x * s), y1: f(y0 + h - t), x2: f(x0 + x * s), y2: f(y0 + h), stroke: INK, 'stroke-width': 0.35 }, svg);
+    });
+    el('line', { x1: f(x0 + 50 * s), y1: f(y0 + t), x2: f(x0 + 50 * s), y2: f(y0 + h - t), stroke: INK, 'stroke-width': 0.3, 'stroke-dasharray': '0.9 0.6' }, svg);
+    return svg;
+  }
+
+  /* ===== Tờ hướng dẫn cho trẻ (giấy trắng, 1 trang) ===== */
+  function stepHTML(num, html, fig) {
+    return '<div class="kstep"><span class="n">' + num + '</span><div class="t">' + html + '</div>' +
+      (fig ? '<div class="fig" data-fig="' + fig + '"></div>' : '<div></div>') + '</div>';
+  }
+
+  function buildGuide(n) {
+    var wrap = wrapSheet('g', '<b>Tờ hướng dẫn cho trẻ</b> — in trên giấy trắng; trẻ tự đọc, làm theo và viết thẳng vào ô trống.');
+    var sec = document.createElement('section');
+    sec.className = 'page guide';
+    sec.innerHTML =
+      '<header class="ph">' +
+        '<div class="over">Toán · Hình học</div>' +
+        '<h2>Diện tích hình tròn</h2>' +
+        '<p>Biến 2 hình tròn thành 1 hình chữ nhật để tìm diện tích hình tròn.</p>' +
+        '<p class="need"><b>Cần có:</b> tờ cam và tờ xanh lá có nét cắt, kéo, keo dán, thước kẻ, bút chì.</p>' +
+      '</header>' +
+      '<div class="kbody">' +
+        stepHTML(1, 'Cắt theo các <b>nét đứt</b> trên 2 tờ giấy.', 'pieces') +
+        stepHTML(2, 'Bôi keo lên <b>mép dán</b>, dán 2 dải cùng màu thành 1 hình chữ nhật dài.', 'join') +
+        stepHTML(3, 'Xếp ' + n + ' hình quạt <b>xanh lá</b> thành hàng, đỉnh quay lên.', 'a1') +
+        stepHTML(4, 'Xếp ' + (n - 1) + ' hình quạt <b>cam</b> vào các khe, đỉnh quay xuống.', 'a2') +
+        stepHTML(5, 'Đặt 2 nửa hình quạt cam vào hai đầu.', 'a3') +
+        stepHTML(6, 'Đặt cạnh hình chữ nhật cam: gần bằng nhau. <b>Dài = chu vi</b> hình tròn, <b>rộng = bán kính</b>.', 'cmp') +
+        stepHTML(7, 'Viết vào ô trống:' +
+          '<div class="rec">' +
+            '<p>Diện tích hình chữ nhật = dài × rộng = 2 × π × r × r</p>' +
+            '<p>Hình chữ nhật này ghép từ <span class="blank s"></span> hình tròn.</p>' +
+            '<p>Diện tích 1 hình tròn = <span class="blank l"></span></p>' +
+          '</div>') +
+        stepHTML(8, 'Dùng thước nối các vạch nhỏ trên hình chữ nhật <b>xanh lá</b>, rồi gấp đôi.' +
+          '<p class="ln">Mỗi nửa có <span class="blank s"></span> ô vuông cạnh r và thêm một chút.</p>', 'ticks') +
+        stepHTML(9, '<p class="ln">Hình tròn có r = 5 cm. Diện tích = <span class="blank m"></span> cm²</p>' +
+          '<p class="ln">Một nửa hình chữ nhật xanh lá: 15,7 × 5 = <span class="blank m"></span> cm²</p>' +
+          '<p class="ln"><b>Hai số có bằng nhau không?</b> <span class="blank m"></span></p>') +
+      '</div>';
+    var figs = {
+      pieces: figPieces(n), join: figJoin(),
+      a1: arrangeSVG(n, 0.28, false, false), a2: arrangeSVG(n, 0.28, true, false), a3: arrangeSVG(n, 0.28, true, true),
+      cmp: figCompare(n), ticks: figTicks()
+    };
+    sec.querySelectorAll('[data-fig]').forEach(function (slot) { slot.appendChild(figs[slot.getAttribute('data-fig')]); });
+    wrap.appendChild(sec);
+  }
+
+  /* ===== Vẽ lại ===== */
   function render() {
     sheetsEl.innerHTML = '';
-    SHEETS.forEach(function (s, i) { buildSheet(s, state.n, i); });
+    SHEETS.forEach(function (s) { buildCutSheet(s, state.n); });
+    buildGuide(state.n);
     document.querySelectorAll('#segN button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.v === state.n)); });
     fit();
   }
@@ -169,6 +387,13 @@
   document.querySelectorAll('#segN button').forEach(function (b) {
     b.addEventListener('click', function () { state.n = +b.dataset.v; render(); });
   });
+  document.querySelectorAll('[data-print]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.body.setAttribute('data-print', b.getAttribute('data-print'));
+      window.print();
+    });
+  });
+  window.addEventListener('afterprint', function () { document.body.removeAttribute('data-print'); });
 
   render();
 })();
