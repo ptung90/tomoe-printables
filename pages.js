@@ -29,6 +29,24 @@ window.PAGES = [
     updated: "2026-10-23"
   },
   {
+    path: "so-do-phan-loai-thuc-vat/",
+    title: "Sơ đồ phân loại thực vật",
+    desc: "Poster A2 ngang: thực vật không hạt (rêu, rêu tản, rêu sừng, thông đất, dương xỉ) và có hạt (4 ngành hạt trần; hạt kín một lá mầm, hai lá mầm). 61 hình có tên Việt – Anh.",
+    subject: "Sinh học",
+    tags: ["poster", "sơ đồ", "phân loại", "thực vật", "rêu", "dương xỉ", "hạt trần", "hạt kín", "A2"],
+    icon: "🌿",
+    updated: "2026-10-21"
+  },
+  {
+    path: "so-do-phan-loai-dong-vat/",
+    title: "Sơ đồ phân loại động vật",
+    desc: "Poster A2 ngang: động vật không xương sống (8 ngành, Chân khớp chia 4 lớp) và có xương sống (6 lớp: cá sụn, cá xương, lưỡng cư, bò sát, chim, thú). 129 hình có tên Việt – Anh.",
+    subject: "Sinh học",
+    tags: ["poster", "sơ đồ", "phân loại", "động vật", "không xương sống", "có xương sống", "A2"],
+    icon: "🦎",
+    updated: "2026-10-20"
+  },
+  {
     path: "dong-vat-khong-xuong-song/",
     title: "Thẻ Động vật không xương sống",
     desc: "8 nhóm lớn, 11 thẻ: thẻ tên, thẻ đặc điểm, thẻ kiểm soát. Có sơ đồ phân loại, bảng so sánh và phần ôn tập trắc nghiệm.",
