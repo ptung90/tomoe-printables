@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khung hạt thấp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/worksheet.css">
+<style>
+.kh-bai{font-weight:600;margin:3.5mm 0 2mm}
+.kh-frames{display:grid;grid-template-columns:1fr 1fr;gap:6mm;justify-items:center}
+.kh-frames figure{margin:0;text-align:center}
+.kh-frames svg{display:block;width:80mm;height:auto}
+.kh-frames figcaption{margin-top:1mm;font-weight:700;font-size:12pt}
+.kh-ops{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm 6mm}
+.kh-ops.two{grid-template-columns:repeat(2,58mm);justify-content:space-around}
+.kh-op .eq{font-size:11.5pt;margin-bottom:1mm;white-space:nowrap}
+.kh-op .eq b{margin-right:1.5mm}
+.kh-op .chg{font-size:9.5pt;color:#3d4a57;margin-top:1mm;padding-left:6mm}
+.kh-tab{border-collapse:collapse;font-variant-numeric:tabular-nums}
+.kh-tab th{font-size:7pt;font-weight:600;padding:.6mm 0;width:10mm;border:.2mm solid #d7dde3}
+.kh-tab td{width:10mm;height:7mm;text-align:center;font-size:14pt;border:.2mm solid #d7dde3}
+.kh-tab td.op{width:5mm;border:0;font-weight:700;font-size:13pt}
+.kh-tab th.op{border:0}
+.kh-tab tr.sum td{border-top:.6mm solid #1f2933;height:8mm}
+.kh-tab tr.sum td.op{border-top:.6mm solid #1f2933}
+.c1{color:#2e8b57}.c10{color:#1e63c4}.c100{color:#d32f2f}.c1000{color:#2e8b57}
+.kh-probs{display:grid;gap:0;border:.25mm solid #c9d2db}
+.kh-probs.two{grid-template-columns:1fr 1fr}
+.kh-probs.two .kh-prob+.kh-prob{border-left:.25mm solid #c9d2db}
+.kh-prob{padding:2.5mm 3.5mm;font-size:11pt;line-height:1.45}
+.kh-prob p{margin:0 0 1.2mm}
+.kh-prob .sum{padding-left:4mm}
+.page.answer .ws-key{font-size:10pt}
+.page.answer .ws-key th,.page.answer .ws-key td{padding:.8mm 2mm}
+.page.answer .ws-keytitle{margin:3mm 0 1.2mm}
+</style>
+</head>
+<body>
+<script src="../assets/worksheet.js"></script>
+<script>
+(function () {
+  'use strict';
+  var PLACES = [['Ngàn', 'c1000'], ['Trăm', 'c100'], ['Chục', 'c10'], ['Đ.vị', 'c1']];
+  var WIRE = [['1', '#2e8b57'], ['10', '#1e63c4'], ['100', '#d32f2f'], ['1000', '#2e8b57']];
+  var ADD = [
+    { t: 'Thư viện có {a} quyển sách. Thư viện nhận thêm {b} quyển sách. Hỏi thư viện có tất cả bao nhiêu quyển sách?', s: ['Có', 'Nhận thêm', 'Có tất cả'], u: 'quyển sách' },
+    { t: 'Tuần đầu, đội trồng cây trồng được {a} cây. Tuần sau, đội trồng được {b} cây. Hỏi cả hai tuần đội trồng được bao nhiêu cây?', s: ['Tuần đầu', 'Tuần sau', 'Cả hai tuần'], u: 'cây' },
+    { t: 'Buổi sáng, nhà máy đóng được {a} hộp sữa. Buổi chiều, nhà máy đóng được {b} hộp sữa. Hỏi cả ngày nhà máy đóng được bao nhiêu hộp sữa?', s: ['Buổi sáng', 'Buổi chiều', 'Cả ngày'], u: 'hộp sữa' }
+  ];
+  var SUB = [
+    { t: 'Trang trại có {a} con gà. Bác nông dân đã bán {b} con gà. Hỏi trang trại còn lại bao nhiêu con gà?', s: ['Có', 'Đã bán', 'Còn lại'], u: 'con gà' },
+    { t: 'Cửa hàng có {a} quyển vở. Cửa hàng đã bán {b} quyển vở. Hỏi cửa hàng còn lại bao nhiêu quyển vở?', s: ['Có', 'Đã bán', 'Còn lại'], u: 'quyển vở' },
+    { t: 'Bể chứa có {a} lít nước. Người ta đã dùng {b} lít nước để tưới cây. Hỏi bể còn lại bao nhiêu lít nước?', s: ['Có', 'Đã dùng', 'Còn lại'], u: 'lít nước' }
+  ];
+
+  function digits(n) { return [Math.floor(n / 1000), Math.floor(n / 100) % 10, Math.floor(n / 10) % 10, n % 10]; }
+  // number of exchanges on the bead frame = carries (addition) or borrows (subtraction), units first
+  function changes(a, b, op) {
+    var A = digits(a).reverse(), B = digits(b).reverse(), c = 0, n = 0;
+    for (var i = 0; i < 4; i++) {
+      var d = op === '+' ? A[i] + B[i] + c : A[i] - B[i] - c;
+      if (op === '+' ? d >= 10 : d < 0) { n++; c = 1; } else c = 0;
+    }
+    return n;
+  }
+  // a op b with an exact number of exchanges (want: 0, 1, or 'many' = 2+)
+  function makeOp(rng, op, want, zeros) {
+    for (var t = 0; t < 5000; t++) {
+      var a, b;
+      if (op === '+') { a = rng.int(1000, 8000); b = rng.int(1000, 9999 - a); }
+      else {
+        a = rng.int(2100, 9999);
+        if (zeros) {                             // zeros inside the minuend force chained exchanges
+          var d = digits(a);
+          d[rng.int(1, 2)] = 0;
+          if (rng.chance(0.5)) d[3] = 0;
+          a = d[0] * 1000 + d[1] * 100 + d[2] * 10 + d[3];
+        }
+        b = rng.int(1000, a - 1000);             // keep the difference in the thousands
+        if (b < 1000) continue;
+      }
+      var n = changes(a, b, op);
+      if (want === 'many' ? n >= 2 : n === want) return { a: a, b: b, op: op, r: op === '+' ? a + b : a - b, n: n };
+    }
+    return null;
+  }
+
+  function frameSvg(num, empty) {
+    var W = 86, H = 42, x0 = 17, x1 = 82, out = '<rect x="1" y="1" width="' + (W - 2) + '" height="' + (H - 2) + '" rx="2" fill="#fff" stroke="#b07a45" stroke-width="1.8"/>' +
+      '<line x1="' + (x0 - 2) + '" y1="2" x2="' + (x0 - 2) + '" y2="' + (H - 2) + '" stroke="#b07a45" stroke-width="1.4"/>';
+    var dg = num == null ? null : digits(num).reverse();
+    WIRE.forEach(function (w, i) {
+      var y = 7.5 + i * 9, col = w[1];
+      out += '<text x="' + ((x0 - 2) / 2 + .6) + '" y="' + y + '" font-size="3" font-weight="700" fill="' + col + '" text-anchor="middle" dominant-baseline="central">' + w[0] + '</text>' +
+        '<line x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '" stroke="#444" stroke-width=".3"/>';
+      for (var k = 0; k < 10; k++) {
+        var cx;
+        if (empty) cx = x0 + 2.4 + k * ((x1 - x0 - 4.8) / 9);
+        else { var right = k >= 10 - dg[i]; cx = right ? x1 - 2.2 - (9 - k) * 4.1 : x0 + 2.2 + k * 4.1; }
+        out += empty ? '<circle cx="' + cx.toFixed(2) + '" cy="' + y + '" r="1.75" fill="#fff" stroke="' + col + '" stroke-width=".35"/>'
+                     : '<circle cx="' + cx.toFixed(2) + '" cy="' + y + '" r="2" fill="' + col + '"/>';
+      }
+    });
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Khung hạt thấp">' + out + '</svg>';
+  }
+
+  function opBlock(ws, label, o, withChanges) {
+    var A = digits(o.a), B = digits(o.b);
+    var head = '<tr><th class="op"></th>' + PLACES.map(function (p) { return '<th class="' + p[1] + '">' + p[0] + '</th>'; }).join('') + '</tr>';
+    var row = function (d, op) { return '<tr><td class="op">' + op + '</td>' + d.map(function (x, i) { return '<td class="' + PLACES[i][1] + '">' + x + '</td>'; }).join('') + '</tr>'; };
+    return '<div class="kh-op"><div class="eq"><b>' + label + ')</b>' + o.a + ' ' + o.op.replace('-', '–') + ' ' + o.b + ' = ………</div>' +
+      '<table class="kh-tab">' + head + row(A, '') + row(B, o.op === '+' ? '+' : '–') +
+      '<tr class="sum"><td class="op"></td><td></td><td></td><td></td><td></td></tr></table>' +
+      (withChanges ? '<div class="chg">Em đã đổi hàng: …… lần</div>' : '') + '</div>';
+  }
+
+  function problem(rng, op, want) {
+    var tpl = rng.pick(op === '+' ? ADD : SUB), o = makeOp(rng, op, want, false);
+    o.tpl = tpl;
+    return o;
+  }
+  function problemHtml(num, o) {
+    var t = o.tpl;
+    return '<div class="kh-prob"><p><b>' + num + '.</b> ' + t.t.replace('{a}', o.a).replace('{b}', o.b) + '</p>' +
+      '<p><b>Tóm tắt:</b></p><div class="sum">' + t.s.map(function (s) { return '<p>' + s + ': .............. ' + t.u + '</p>'; }).join('') + '</div>' +
+      '<p><b>Phép tính:</b> ....................................</p><p><b>Đáp số:</b> .................... ' + t.u + '</p></div>';
+  }
+
+  var HOWTO = {
+    1: 'Gạt hạt sang phải để tạo số thứ nhất, bắt đầu từ dây hàng đơn vị. Phép cộng: gạt thêm hạt của số thứ hai sang phải. Phép trừ: gạt bớt hạt về bên trái. Đọc số hạt bên phải mỗi dây và ghi kết quả vào ô.',
+    2: 'Phép cộng: khi một dây đủ 10 hạt bên phải, gạt 10 hạt đó về bên trái, rồi gạt 1 hạt ở dây ngay bên dưới sang phải. Phép trừ: khi dây không đủ hạt để bớt, gạt 1 hạt ở dây ngay bên dưới về bên trái, rồi gạt 10 hạt ở dây đang làm sang phải. Mỗi lần như vậy là một lần đổi hàng. Đếm xem em đã đổi mấy lần.',
+    3: 'Có thể phải đổi hàng ở nhiều dây. Làm lần lượt từ dây hàng đơn vị xuống dây hàng ngàn. Phép trừ: nếu dây ngay bên dưới không có hạt nào bên phải (chữ số 0), đổi từ dây kế tiếp trước, rồi đổi dần lên.'
+  };
+  var TITLE = { 1: 'Cấp độ 1: Cộng, trừ không nhớ', 2: 'Cấp độ 2: Cộng, trừ có nhớ một lần', 3: 'Cấp độ 3: Cộng, trừ có nhớ nhiều lần' };
+
+  Worksheet({
+    title: 'Khung hạt thấp – cộng, trừ đến hàng ngàn',
+    kicker: 'Toán · Khung hạt thấp',
+    intro: 'Ba cấp độ như bộ phiếu gốc: không nhớ, có nhớ một lần, có nhớ nhiều lần. Mỗi cấp có phép tính đặt theo cột màu của khung hạt, cấp 2 và 3 có thêm toán đố. Bấm “Xáo đề” để đổi số, đáp án ghi cả số lần đổi hàng.',
+    options: [
+      { key: 'l', label: 'Cấp độ', items: [['all', 'Cả 3 cấp'], ['1', 'Cấp 1'], ['2', 'Cấp 2'], ['3', 'Cấp 3']], def: 'all' }
+    ],
+    build: function (st, rng, ws) {
+      var levels = st.l === 'all' ? [1, 2, 3] : [+st.l], pages = [], keys = [];
+      levels.forEach(function (lv) {
+        var html = ws.head('Toán · Khung hạt thấp', TITLE[lv]) + '<div class="ws-howto"><p><b>Cách làm:</b> ' + HOWTO[lv] + '</p></div>';
+        var rows = [];
+        if (lv === 1) {
+          var read = [rng.int(1000, 9999), rng.int(1000, 9999)], make = [rng.int(1000, 9999), rng.int(1000, 9999)];
+          html += '<p class="kh-bai">Bài 1. Đọc số trên khung hạt rồi viết số.</p><div class="kh-frames">' +
+            read.map(function (n, i) { return '<figure>' + frameSvg(n) + '<figcaption>' + 'ab'[i] + ')  Số: ……………</figcaption></figure>'; }).join('') + '</div>' +
+            '<p class="kh-bai">Bài 2. Tô màu số hạt trên mỗi dây để tạo số.</p><div class="kh-frames">' +
+            make.map(function (n, i) { return '<figure>' + frameSvg(null, true) + '<figcaption>' + 'ab'[i] + ')  ' + n + '</figcaption></figure>'; }).join('') + '</div>';
+          read.forEach(function (n, i) { rows.push(['1' + 'ab'[i], 'Đọc số trên khung', n, '—']); });
+          make.forEach(function (n, i) { var d = digits(n); rows.push(['2' + 'ab'[i], 'Tạo số ' + n, 'Đ.vị ' + d[3] + ' · Chục ' + d[2] + ' · Trăm ' + d[1] + ' · Ngàn ' + d[0] + ' hạt', '—']); });
+          var ops1 = ['+', '+', '+', '-', '-', '-'].map(function (op) { return makeOp(rng, op, 0, false); });
+          html += '<p class="kh-bai">Bài 3. Làm phép tính trên khung hạt thấp, rồi ghi kết quả.</p><div class="kh-ops">' +
+            ops1.map(function (o, i) { return opBlock(ws, ws.letters[i], o, false); }).join('') + '</div>';
+          ops1.forEach(function (o, i) { rows.push(['3' + ws.letters[i], o.a + ' ' + o.op.replace('-', '–') + ' ' + o.b, o.r, o.n]); });
+        } else {
+          var ops = lv === 2 ? ['+', '+', '+', '-', '-', '-'].map(function (op) { return makeOp(rng, op, 1, false); })
+                             : [makeOp(rng, '+', 'many'), makeOp(rng, '+', 'many'), makeOp(rng, '-', 'many', true), makeOp(rng, '-', 'many')];
+          html += '<p class="kh-bai">Bài 1. Làm phép tính trên khung hạt thấp, ghi kết quả và số lần đổi hàng.</p><div class="kh-ops' + (lv === 3 ? ' two' : '') + '">' +
+            ops.map(function (o, i) { return opBlock(ws, ws.letters[i], o, true); }).join('') + '</div>';
+          ops.forEach(function (o, i) { rows.push(['1' + ws.letters[i], o.a + ' ' + o.op.replace('-', '–') + ' ' + o.b, o.r, o.n]); });
+          var probs = lv === 2 ? [problem(rng, rng.pick(['+', '-']), 1)] : [problem(rng, '-', 'many'), problem(rng, '+', 'many')];
+          html += '<p class="kh-bai">Bài 2. Giải bài toán (làm phép tính trên khung hạt thấp).</p><div class="kh-probs' + (probs.length > 1 ? ' two' : '') + '">' +
+            probs.map(function (o, i) { return problemHtml(i + 1, o); }).join('') + '</div>';
+          probs.forEach(function (o, i) { rows.push(['2.' + (i + 1), o.a + ' ' + o.op.replace('-', '–') + ' ' + o.b, o.r + ' ' + o.tpl.u, o.n]); });
+        }
+        pages.push({ html: html });
+        keys.push('<div class="ws-keytitle">' + TITLE[lv] + '</div><table class="ws-key"><tr><th class="c">Câu</th><th>Phép tính</th><th>Kết quả</th><th>Số lần đổi hàng</th></tr>' +
+          rows.map(function (r) { return '<tr><td class="c">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; }).join('') + '</table>');
+      });
+      pages.push({ answer: true, html: ws.answerHead('Toán · Khung hạt thấp', 'Đáp án – Khung hạt thấp') + '<p style="margin:0 0 2mm;font-size:10pt;color:#5f6b76;font-style:italic">Để học sinh tự kiểm tra sau khi làm xong. Cắt rời hoặc để ở bàn kiểm tra.</p>' + keys.join('') });
+      return pages;
+    }
+  });
+})();
+</script>
+<script src="../assets/back.js"></script>
+</body>
+</html>

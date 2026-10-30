@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Điền số vào các hình</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/worksheet.css">
+<style>
+.ds-item{margin:0 0 7mm}
+.ds-item .t{margin:0 0 1.5mm;font-size:11pt}
+.ds-item svg{display:block;font-family:"DejaVu Sans","Be Vietnam Pro",sans-serif}
+.ds-key td:last-child{font-size:11pt;letter-spacing:.01em}
+.ds-key .op{color:#8a96a3;font-size:9pt}
+</style>
+</head>
+<body>
+<script src="../assets/worksheet.js"></script>
+<script>
+(function () {
+  'use strict';
+  var STEP_MAX = { 10: 5, 20: 9, 50: 20, 100: 30 };
+  var SHAPES = ['circle', 'square', 'diamond', 'triangle', 'hexagon'];
+  var PER_PAGE = 6;
+  var S = 14, A = 18.3;        // shape box and arrow length, in mm (6 shapes + pad fit the 180 mm line)
+
+  function sign(d) { return (d > 0 ? '+' : '–') + Math.abs(d); }
+
+  // one chain: values v[0..k], steps d[1..k], all values within 0..R
+  function makeChain(rng, R, k) {
+    var mx = STEP_MAX[R];
+    for (var tries = 0; tries < 200; tries++) {
+      var v = [rng.int(0, R)], d = [];
+      for (var i = 0; i < k; i++) {
+        var cur = v[v.length - 1], opts = [];
+        for (var x = -mx; x <= mx; x++) if (x && cur + x >= 0 && cur + x <= R) opts.push(x);
+        var step = rng.pick(opts);
+        d.push(step); v.push(cur + step);
+      }
+      var plus = d.some(function (x) { return x > 0; }), minus = d.some(function (x) { return x < 0; });
+      if (k < 3 || (plus && minus)) return { v: v, d: d };
+    }
+    return { v: v, d: d };
+  }
+
+  function shapeSvg(kind, cx, cy, num) {
+    var st = 'fill="#fff" stroke="#1f2933" stroke-width=".45"', p, ty = cy;
+    if (kind === 'circle') p = '<circle cx="' + cx + '" cy="' + cy + '" r="7" ' + st + '/>';
+    else if (kind === 'square') p = '<rect x="' + (cx - 6.3) + '" y="' + (cy - 6.3) + '" width="12.6" height="12.6" ' + st + '/>';
+    else if (kind === 'diamond') p = '<path d="M' + cx + ' ' + (cy - 7.6) + 'L' + (cx + 7.6) + ' ' + cy + 'L' + cx + ' ' + (cy + 7.6) + 'L' + (cx - 7.6) + ' ' + cy + 'Z" ' + st + '/>';
+    else if (kind === 'triangle') { p = '<path d="M' + cx + ' ' + (cy - 8) + 'L' + (cx + 8.4) + ' ' + (cy + 6.6) + 'L' + (cx - 8.4) + ' ' + (cy + 6.6) + 'Z" ' + st + '/>'; ty = cy + 2.6; }
+    else p = '<path d="M' + (cx - 7.6) + ' ' + cy + 'L' + (cx - 3.8) + ' ' + (cy - 6.6) + 'L' + (cx + 3.8) + ' ' + (cy - 6.6) + 'L' + (cx + 7.6) + ' ' + cy + 'L' + (cx + 3.8) + ' ' + (cy + 6.6) + 'L' + (cx - 3.8) + ' ' + (cy + 6.6) + 'Z" ' + st + '/>';
+    if (num != null) {
+      var fs = String(num).length > 2 ? 4.6 : 6;
+      p += '<text x="' + cx + '" y="' + ty + '" font-size="' + fs + '" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#1f2933">' + num + '</text>';
+    }
+    return p;
+  }
+
+  function chainSvg(item) {
+    var k = item.d.length, W = (k + 1) * S + k * A, H = 25, cy = 16, out = '';
+    for (var i = 0; i <= k; i++) {
+      var cx = S / 2 + i * (S + A);
+      out += shapeSvg(item.shapes[i], cx, cy, i === item.given ? item.v[i] : null);
+      if (i < k) {
+        var x1 = cx + S / 2 + 1.2, x2 = cx + S / 2 + A - 1.2;
+        out += '<line x1="' + x1 + '" y1="' + cy + '" x2="' + (x2 - 2) + '" y2="' + cy + '" stroke="#1f2933" stroke-width=".4"/>' +
+          '<path d="M' + x2 + ' ' + cy + 'L' + (x2 - 2.6) + ' ' + (cy - 1.1) + 'L' + (x2 - 2.6) + ' ' + (cy + 1.1) + 'Z" fill="#1f2933"/>' +
+          '<text x="' + ((x1 + x2) / 2) + '" y="' + (cy - 4.2) + '" font-size="5" font-weight="700" text-anchor="middle" fill="#1f2933">' + sign(item.d[i]) + '</text>';
+      }
+    }
+    // 1.8 mm pad each side: triangle, diamond and hexagon are wider than the S box
+    return '<svg viewBox="-1.8 0 ' + (W + 3.6) + ' ' + H + '" width="' + (W + 3.6) + 'mm" height="' + H + 'mm" role="img" aria-label="Chuỗi ' + k + ' phép tính">' + out + '</svg>';
+  }
+
+  Worksheet({
+    title: 'Điền số vào các hình',
+    kicker: 'Toán tư duy',
+    intro: 'Chuỗi phép cộng, trừ: mỗi bài cho sẵn một số, trẻ tính tiến hoặc tính lùi để điền các hình còn lại. Chọn phạm vi số, số phép tính và vị trí số cho sẵn, rồi bấm “Xáo đề” để có bộ bài mới. Mã đề nằm trong đường link, mở lại link là in lại đúng đề đó.',
+    options: [
+      { key: 'r', label: 'Phạm vi', items: [['10', 'Đến 10'], ['20', 'Đến 20'], ['50', 'Đến 50'], ['100', 'Đến 100']], def: '20' },
+      { key: 'n', label: 'Số phép tính', items: [['3', '3'], ['4', '4'], ['5', '5'], ['mix', 'Trộn 3–5']], def: 'mix' },
+      { key: 'g', label: 'Số cho sẵn', items: [['start', 'Ở hình đầu'], ['any', 'Ở hình bất kỳ'], ['mix', 'Trộn']], def: 'mix' },
+      { key: 'c', label: 'Số bài', items: [['6', '6 bài'], ['12', '12 bài'], ['18', '18 bài'], ['24', '24 bài']], def: '12' }
+    ],
+    build: function (st, rng, ws) {
+      var R = +st.r, count = +st.c, items = [];
+      for (var i = 0; i < count; i++) {
+        // in "Trộn", chains grow longer through the set, like the original worksheet
+        var k = st.n === 'mix' ? 3 + Math.min(2, Math.floor(i * 3 / count)) : +st.n;
+        var ch = makeChain(rng, R, k);
+        var mode = st.g === 'mix' ? (i < count / 2 ? 'start' : 'any') : st.g;
+        ch.given = mode === 'start' ? 0 : rng.int(1, k);
+        ch.shapes = [];
+        for (var j = 0; j <= k; j++) {
+          var s; do { s = rng.pick(SHAPES); } while (j && s === ch.shapes[j - 1]);
+          ch.shapes.push(s);
+        }
+        items.push(ch);
+      }
+      var pages = [];
+      for (var p = 0; p < items.length; p += PER_PAGE) {
+        var html = ws.head('Toán tư duy · Phạm vi ' + R, 'Điền số vào các hình');
+        items.slice(p, p + PER_PAGE).forEach(function (it, n) {
+          html += '<div class="ds-item"><p class="t"><b>Bài ' + (p + n + 1) + '.</b> Điền số vào các hình.</p>' + chainSvg(it) + '</div>';
+        });
+        pages.push({ html: html });
+      }
+      var key = '<table class="ws-key ds-key"><tr><th class="c">Bài</th><th>Số trong từng hình, đọc từ trái sang phải (số in đậm là số cho sẵn)</th></tr>' +
+        items.map(function (it, i) {
+          var cells = it.v.map(function (x, j) { return j === it.given ? '<b>' + x + '</b>' : String(x); });
+          var row = cells[0];
+          for (var j = 0; j < it.d.length; j++) row += ' <span class="op">→(' + sign(it.d[j]) + ')→</span> ' + cells[j + 1];
+          return '<tr><td class="c">' + (i + 1) + '</td><td>' + row + '</td></tr>';
+        }).join('') + '</table>';
+      pages.push({ answer: true, html: ws.answerHead('Toán tư duy · Phạm vi ' + R, 'Đáp án – Điền số vào các hình') + key });
+      return pages;
+    }
+  });
+})();
+</script>
+<script src="../assets/back.js"></script>
+</body>
+</html>

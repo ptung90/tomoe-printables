@@ -2,6 +2,51 @@
 // Các trường: path (thư mục), title, desc, subject (môn), tags (từ khoá để tìm), icon (1 emoji), updated (YYYY-MM-DD)
 window.PAGES = [
   {
+    path: "dien-so-vao-hinh/",
+    title: "Điền số vào các hình",
+    desc: "Phiếu toán tư duy: chuỗi phép cộng, trừ cho sẵn một số, trẻ điền các hình còn lại. Chọn phạm vi 10–100, 3–5 phép tính, 6–24 bài; bấm “Xáo đề” để có bộ mới, kèm đáp án.",
+    subject: "Toán",
+    tags: ["phép cộng", "phép trừ", "toán tư duy", "lớp 1", "phiếu bài tập", "xáo đề", "đáp án"],
+    icon: "🔺",
+    updated: "2026-10-30"
+  },
+  {
+    path: "so-sanh-phan-so/",
+    title: "So sánh phân số",
+    desc: "Phiếu điền dấu >, <, = giữa hai phân số, 20 câu mỗi phiếu: cùng mẫu số, khác mẫu số (mẫu là bội hoặc bất kỳ), trộn. Chọn mẫu số tối đa và số phiếu; xáo đề, kèm đáp án.",
+    subject: "Toán",
+    tags: ["phân số", "so sánh", "mẫu số", "level 2", "phiếu bài tập", "xáo đề", "đáp án"],
+    icon: "➗",
+    updated: "2026-10-30"
+  },
+  {
+    path: "khung-hat-thap/",
+    title: "Khung hạt thấp – cộng, trừ đến hàng ngàn",
+    desc: "Ba cấp độ: không nhớ, có nhớ một lần, có nhớ nhiều lần. Có khung hạt để đọc số và tô màu, phép tính đặt theo cột màu, toán đố; đáp án ghi cả số lần đổi hàng.",
+    subject: "Toán",
+    tags: ["khung hạt", "small bead frame", "cộng có nhớ", "trừ có nhớ", "hàng ngàn", "toán đố", "xáo đề"],
+    icon: "🧮",
+    updated: "2026-10-30"
+  },
+  {
+    path: "phieu-xem-lich/",
+    title: "Phiếu xem lịch",
+    desc: "Bốn phiếu: hôm nay của em, các ngày trong tuần, hai phiếu đọc tờ lịch tháng. Chọn tháng, năm: tờ lịch, ngày lễ, câu hỏi và đáp án tự đổi theo.",
+    subject: "Lịch sử",
+    tags: ["lịch", "ngày trong tuần", "tháng", "thời gian", "phiếu bài tập", "xáo đề", "đáp án"],
+    icon: "📅",
+    updated: "2026-10-30"
+  },
+  {
+    path: "phieu-xem-dong-ho/",
+    title: "Phiếu xem đồng hồ",
+    desc: "Đọc giờ đúng, giờ rưỡi, vẽ kim, một ngày của em; thêm phiếu 15 – 45 phút hoặc phút chẵn 5. Bấm “Xáo đề” để đổi giờ trên mọi đồng hồ, kèm đáp án.",
+    subject: "Lịch sử",
+    tags: ["đồng hồ", "xem giờ", "giờ rưỡi", "thời gian", "phiếu bài tập", "xáo đề", "đáp án"],
+    icon: "🕒",
+    updated: "2026-10-30"
+  },
+  {
     path: "tim-so/",
     title: "Tìm số tiếng Anh",
     desc: "Poster trò chơi tìm số: chữ số tiếng Anh xếp ngẫu nhiên, từ 1–10 đến 1–100. Chọn khổ A5/A4, ngang/dọc, font chữ, màu; in trực tiếp.",

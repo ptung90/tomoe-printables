@@ -1,0 +1,72 @@
+/* Shared styles for printable worksheet generators: control panel on screen, A4 pages for print */
+:root{
+  --bg:#F2F5F1; --panel:#FFFFFF; --ink:#1D3331; --muted:#566C69; --line:#D6E1DB;
+  --accent:#2F7D8A; --accent-ink:#FFFFFF; --warn:#C0392B;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111C1B; --panel:#192827; --ink:#E8F1ED; --muted:#A2B8B2; --line:#2C4241;
+  --accent:#5DB2BE; --accent-ink:#0E1A19; --warn:#F0765A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111C1B; --panel:#192827; --ink:#E8F1ED; --muted:#A2B8B2; --line:#2C4241;
+  --accent:#5DB2BE; --accent-ink:#0E1A19; --warn:#F0765A; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body)}
+
+/* ---------- control panel (screen only) ---------- */
+.ws-ui{max-width:860px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left,0px)) 8px;display:grid;gap:14px}
+.ws-ui header h1{margin:0;font-size:26px;line-height:1.15;font-weight:700;text-wrap:balance}
+.ws-ui header p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.5;max-width:70ch}
+.ws-panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:10px}
+.ws-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.ws-row>.lab{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:96px}
+.ws-chip{font:600 14px var(--f-body);border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer;font-variant-numeric:tabular-nums}
+.ws-chip:hover{border-color:var(--accent)}
+.ws-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ws-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:4px}
+.ws-btn{font:700 14px var(--f-body);border-radius:10px;padding:8px 16px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.ws-btn.ghost{background:transparent;color:var(--accent)}
+.ws-chip:focus-visible,.ws-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ws-status{font-size:13px;color:var(--muted)}
+.ws-status b{color:var(--ink);font-variant-numeric:tabular-nums}
+.ws-status .warn{color:var(--warn);font-weight:600}
+
+/* ---------- A4 pages ---------- */
+.ws-sheets{display:flex;flex-direction:column;align-items:center;gap:22px;padding:12px 16px 64px}
+.page{position:relative;flex:none;width:210mm;height:297mm;padding:13mm 15mm 12mm;background:#fff;color:#1f2933;overflow:hidden;
+  box-shadow:0 1px 2px rgba(16,24,40,.08),0 10px 30px rgba(16,24,40,.12);font-family:var(--f-body);font-size:12pt;line-height:1.4;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page.overflow{outline:3px solid var(--warn)}
+.page .foot{position:absolute;left:15mm;right:15mm;bottom:6mm;font-size:8pt;color:#8a96a3;display:flex;justify-content:space-between}
+
+/* worksheet header: kicker · title · name/date */
+.ws-head{border-bottom:.5mm solid #1f2933;padding-bottom:2.5mm;margin-bottom:4mm}
+.ws-head .kicker{font-size:8.5pt;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6b7785}
+.ws-head h2{margin:.6mm 0 2mm;font-size:19pt;line-height:1.15;font-weight:700}
+.ws-head .who{display:flex;gap:6mm;font-size:11pt;color:#3d4a57}
+.ws-head .who span{flex:1;white-space:nowrap;overflow:hidden}
+.ws-head .who span:last-child{flex:0 0 52mm}
+.ws-task{font-weight:600;margin:0 0 3mm}
+.ws-howto{background:#f3f5f2;border-radius:2mm;padding:2.5mm 3.5mm;font-size:10.5pt;line-height:1.45;margin:0 0 4mm}
+.ws-howto p{margin:0}
+.ws-blank{display:inline-block;min-width:14mm;border-bottom:.3mm dotted #1f2933;height:1em;vertical-align:baseline}
+
+/* answer pages */
+.page.answer .ws-head h2{color:#2F7D8A}
+.ws-key{width:100%;border-collapse:collapse;font-size:10.5pt}
+.ws-key th,.ws-key td{border:.25mm solid #c9d2db;padding:1.4mm 2.2mm;text-align:left;vertical-align:top}
+.ws-key th{background:#f1f4f6;font-weight:600}
+.ws-key td.c{text-align:center;width:14mm}
+.ws-key h3{margin:0}
+.ws-keytitle{font-size:12pt;font-weight:700;margin:4mm 0 1.5mm}
+
+@page{size:A4 portrait;margin:0}
+@media print{
+  html,body{background:#fff}
+  .ws-ui{display:none}
+  .ws-sheets{display:block;padding:0;zoom:1 !important}
+  .page{box-shadow:none;outline:none !important;break-after:page}
+  .page:last-child{break-after:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}

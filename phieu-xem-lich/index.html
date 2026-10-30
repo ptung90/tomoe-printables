@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phiếu xem lịch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/worksheet.css">
+<style>
+.lc-q{margin:0 0 4.2mm;font-size:13pt;line-height:1.5}
+.lc-q .ln{display:inline-block;min-width:52mm;border-bottom:.3mm dotted #1f2933;height:1.1em;vertical-align:baseline;margin-left:2mm}
+.lc-q .ln.s{min-width:24mm}
+.lc-sent{font-size:13pt;line-height:2.1;margin:0 0 4.2mm 6mm}
+.lc-weather{display:flex;gap:9mm;margin:1.5mm 0 0 6mm;font-size:13pt}
+.lc-weather span::before{content:"";display:inline-block;width:4.2mm;height:4.2mm;border:.35mm solid #1f2933;border-radius:.6mm;margin-right:2mm;vertical-align:-.6mm}
+.lc-seq{display:grid;gap:4mm;margin:2mm 0 0 6mm}
+.lc-seq div{display:flex;align-items:center;gap:3mm;font-size:13pt}
+.lc-seq .box{width:34mm;height:11mm;border:.35mm solid #1f2933;border-radius:1.5mm;display:flex;align-items:center;justify-content:center;font-weight:600}
+.lc-seq .box.blank{border-style:dashed;border-color:#8a96a3}
+.lc-seq .arr{color:#6b7785}
+.lc-cal{border-collapse:collapse;margin:1mm auto 6mm;font-variant-numeric:tabular-nums}
+.lc-cal caption{font-weight:700;font-size:14pt;padding:0 0 2mm;letter-spacing:.04em}
+.lc-cal th{width:23mm;height:10mm;border:.3mm solid #1f2933;background:#eef3f6;font-size:10pt;line-height:1.15;font-weight:600}
+.lc-cal th.sun{color:#c0392b}
+.lc-cal td{height:13mm;border:.3mm solid #1f2933;text-align:left;vertical-align:top;padding:1mm 1.6mm;font-size:13pt;font-weight:600}
+.lc-cal td.sun{color:#c0392b}
+.lc-cal td.out{background:#f6f7f8}
+.lc-key p{margin:0 0 2mm;font-size:11pt}
+.lc-key b{display:inline-block;min-width:9mm}
+</style>
+</head>
+<body>
+<script src="../assets/worksheet.js"></script>
+<script>
+(function () {
+  'use strict';
+  var WD = ['Chủ nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];   // index = Date.getDay()
+  var WEEK = [1, 2, 3, 4, 5, 6, 0];                                                    // Monday-first order
+  var DAYS = { 1: [1, 'Tết Dương lịch'], 2: [27, 'Ngày Thầy thuốc Việt Nam'], 3: [8, 'Ngày Quốc tế Phụ nữ'], 4: [30, 'Ngày Giải phóng miền Nam'],
+    5: [1, 'Ngày Quốc tế Lao động'], 6: [1, 'Ngày Quốc tế Thiếu nhi'], 7: [27, 'Ngày Thương binh – Liệt sĩ'], 8: [19, 'Ngày Cách mạng tháng Tám'],
+    9: [2, 'Ngày Quốc khánh'], 10: [20, 'Ngày Phụ nữ Việt Nam'], 11: [20, 'Ngày Nhà giáo Việt Nam'], 12: [22, 'Ngày Quân đội nhân dân Việt Nam'] };
+
+  var now = new Date();
+  var nextMonth = now.getMonth() + 2 > 12 ? 1 : now.getMonth() + 2;
+  var years = [now.getFullYear(), now.getFullYear() + 1].map(String);
+
+  function wdOf(y, m, d) { return new Date(y, m - 1, d).getDay(); }
+  function lower(s) { return s.charAt(0).toLowerCase() + s.slice(1); }
+  function ln(s) { return '<span class="ln' + (s ? ' s' : '') + '"></span>'; }
+
+  function calendar(y, m) {
+    var last = new Date(y, m, 0).getDate(), first = (wdOf(y, m, 1) + 6) % 7;   // 0 = Monday
+    var html = '<table class="lc-cal"><caption>THÁNG ' + m + ' – NĂM ' + y + '</caption><tr>' +
+      WEEK.map(function (w) { return '<th' + (w === 0 ? ' class="sun"' : '') + '>' + WD[w].replace(' ', '<br>') + '</th>'; }).join('') + '</tr>';
+    var cells = first + last, rows = Math.ceil(cells / 7);
+    for (var r = 0; r < rows; r++) {
+      html += '<tr>';
+      for (var c = 0; c < 7; c++) {
+        var d = r * 7 + c - first + 1, cls = [];
+        if (c === 6) cls.push('sun');
+        if (d < 1 || d > last) { cls.push('out'); d = ''; }
+        html += '<td' + (cls.length ? ' class="' + cls.join(' ') + '"' : '') + '>' + d + '</td>';
+      }
+      html += '</tr>';
+    }
+    return html + '</table>';
+  }
+
+  Worksheet({
+    title: 'Phiếu xem lịch',
+    kicker: 'Lịch sử · Lịch',
+    intro: 'Bốn phiếu: hôm nay của em, các ngày trong tuần, và hai phiếu đọc tờ lịch tháng. Chọn tháng, năm: tờ lịch, câu hỏi và đáp án tự đổi theo. Bấm “Xáo đề” để đổi các câu thứ còn thiếu, thứ cần khoanh và ngày “hôm nay”.',
+    options: [
+      { key: 'm', label: 'Tháng', items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (m) { return [String(m), 'Th ' + m]; }), def: String(nextMonth) },
+      { key: 'y', label: 'Năm', items: years.map(function (y) { return [y, y]; }), def: years[nextMonth === 1 ? 1 : 0] }
+    ],
+    build: function (st, rng, ws) {
+      var y = +st.y, m = +st.m, last = new Date(y, m, 0).getDate(), K = 'Lịch sử · Lịch', pages = [];
+
+      // L1 — hôm nay của em
+      pages.push({ html: ws.head(K + ' · Phiếu L1', 'Hôm nay của em') + '<p class="ws-task">Em xem lịch của lớp rồi trả lời.</p>' +
+        ['Hôm nay là thứ mấy?', 'Ngày mai là thứ mấy?', 'Hôm qua là thứ mấy?', 'Hôm nay là ngày mấy?', 'Tháng này là tháng mấy?', 'Năm nay là năm bao nhiêu?']
+          .map(function (q, i) { return '<p class="lc-q">' + (i + 1) + '. ' + q + ln() + '</p>'; }).join('') +
+        '<p class="lc-q">7. Em viết lại thành một câu:</p><p class="lc-sent">Hôm nay là thứ .................., ngày ..........., tháng ........... năm ....................</p>' +
+        '<p class="lc-q">8. Hôm nay trời thế nào? Em đánh dấu ✓.</p><div class="lc-weather"><span>Nắng</span><span>Mưa</span><span>Nhiều mây</span><span>Có gió</span></div>' });
+
+      // L2 — các ngày trong tuần: 5 sequences of three days, one blank
+      var starts = rng.shuffle([0, 1, 2, 3, 4, 5, 6]).slice(0, 5), seqAns = [];
+      var seqs = starts.map(function (s) {
+        var trio = [WEEK[s], WEEK[(s + 1) % 7], WEEK[(s + 2) % 7]], gap = rng.int(0, 2);
+        seqAns.push(WD[trio[gap]]);
+        return '<div>' + trio.map(function (w, i) { return i === gap ? '<span class="box blank"></span>' : '<span class="box">' + WD[w] + '</span>'; }).join('<span class="arr">→</span>') + '</div>';
+      });
+      pages.push({ html: ws.head(K + ' · Phiếu L2', 'Các ngày trong tuần') +
+        '<p class="lc-q">1. Một tuần có mấy ngày?' + ln(1) + '</p><p class="lc-q">2. Ngày đầu tuần là thứ mấy?' + ln() + '</p>' +
+        '<p class="lc-q">3. Ngày cuối tuần là thứ mấy?' + ln() + '</p><p class="lc-q">4. Em viết thứ còn thiếu vào ô trống:</p><div class="lc-seq">' + seqs.join('') + '</div>' });
+
+      // L3 — đọc tờ lịch (1)
+      var hol = DAYS[m];
+      pages.push({ html: ws.head(K + ' · Phiếu L3', 'Đọc tờ lịch tháng ' + m + ' (1)') + calendar(y, m) +
+        '<p class="lc-q">1. Tháng ' + m + ' có bao nhiêu ngày?' + ln(1) + '</p>' +
+        '<p class="lc-q">2. Ngày 1 tháng ' + m + ' là thứ mấy?' + ln() + '</p>' +
+        '<p class="lc-q">3. Ngày ' + hol[0] + ' tháng ' + m + ' là ' + hol[1] + '. Em tô màu ô ngày ' + hol[0] + '. Ngày đó là thứ mấy?' + ln() + '</p>' });
+
+      // L4 — đọc tờ lịch (2): circle one weekday, last day, today/tomorrow/yesterday
+      var circ = rng.pick([0, 0, 6, 1, 3, 5]), circDays = [];
+      for (var d = 1; d <= last; d++) if (wdOf(y, m, d) === circ) circDays.push(d);
+      var today = rng.int(2, last - 1), tw = wdOf(y, m, today);
+      pages.push({ html: ws.head(K + ' · Phiếu L4', 'Đọc tờ lịch tháng ' + m + ' (2)') + calendar(y, m) +
+        '<p class="lc-q">1. Em khoanh tròn các ngày ' + WD[circ] + '. Tháng ' + m + ' có mấy ngày ' + WD[circ] + '?' + ln(1) + '</p>' +
+        '<p class="lc-q">2. Ngày cuối cùng của tháng ' + m + ' là ngày mấy?' + ln(1) + '</p>' +
+        '<p class="lc-q">3. Ngày đó là thứ mấy?' + ln() + '</p>' +
+        '<p class="lc-q">4. Nếu hôm nay là ' + lower(WD[tw]) + ', ngày ' + today + ' tháng ' + m + ' thì:</p>' +
+        '<p class="lc-sent">Ngày mai là .................., ngày ..........<br>Hôm qua là .................., ngày ..........</p>' });
+
+      pages.push({ answer: true, html: ws.answerHead(K, 'Đáp án – Phiếu xem lịch (tháng ' + m + '/' + y + ')') + '<div class="lc-key">' +
+        '<div class="ws-keytitle">L1</div><p>Trả lời theo ngày thực tế, cô đối chiếu lịch của lớp. Lưu ý: sau Thứ Bảy là Chủ nhật, sau Chủ nhật là Thứ Hai.</p>' +
+        '<div class="ws-keytitle">L2</div><p>1. 7 ngày · 2. Thứ Hai · 3. Chủ nhật (theo lịch Việt Nam) · 4. ' + seqAns.join(' · ') + '</p>' +
+        '<div class="ws-keytitle">L3</div><p>1. ' + last + ' ngày · 2. ' + WD[wdOf(y, m, 1)] + ' · 3. ' + WD[wdOf(y, m, hol[0])] + '</p>' +
+        '<div class="ws-keytitle">L4</div><p>1. ' + circDays.length + ' ngày (' + circDays.join(', ') + ') · 2. Ngày ' + last + ' · 3. ' + WD[wdOf(y, m, last)] +
+        ' · 4. Ngày mai: ' + WD[(tw + 1) % 7] + ', ngày ' + (today + 1) + '; hôm qua: ' + WD[(tw + 6) % 7] + ', ngày ' + (today - 1) + '</p></div>' });
+      return pages;
+    }
+  });
+})();
+</script>
+<script src="../assets/back.js"></script>
+</body>
+</html>

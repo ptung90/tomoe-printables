@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>So sánh phân số</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/worksheet.css">
+<style>
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:14mm;row-gap:5.2mm;padding:1mm 4mm 0}
+.ps-q{display:flex;align-items:center;gap:3.5mm;font-size:14pt}
+.ps-q .l{width:7mm;font-size:12pt}
+.ps-q .dots{letter-spacing:.12em;color:#1f2933}
+.fr{display:inline-flex;flex-direction:column;align-items:center;line-height:1.05;font-variant-numeric:tabular-nums;min-width:7mm}
+.fr span:first-child{border-bottom:.35mm solid #1f2933;padding:0 1mm .4mm}
+.fr span:last-child{padding:.4mm 1mm 0}
+.ps-key{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2mm 4mm;font-size:10.5pt;margin-bottom:3mm}
+.ps-key b{display:inline-block;width:5mm;text-align:center}
+</style>
+</head>
+<body>
+<script src="../assets/worksheet.js"></script>
+<script>
+(function () {
+  'use strict';
+  var KIND_TITLE = { same: 'So sánh phân số cùng mẫu số', rel: 'So sánh phân số khác mẫu số', far: 'So sánh phân số khác mẫu số', mix: 'So sánh phân số cùng mẫu và khác mẫu' };
+  var PATTERN = { 1: ['mix'], 2: ['same', 'rel'], 3: ['same', 'rel', 'mix'], 5: ['same', 'same', 'rel', 'far', 'mix'] };
+  var PER = 20;
+
+  function cmp(a, b) { var x = a[0] * b[1], y = b[0] * a[1]; return x < y ? '<' : x > y ? '>' : '='; }
+
+  // same denominator; ~10% identical pair
+  function qSame(rng, M) {
+    var d = rng.int(3, M), a = rng.int(1, d - 1), b;
+    if (rng.chance(0.1)) b = a; else do { b = rng.int(1, d - 1); } while (b === a);
+    return [[a, d], [b, d]];
+  }
+  // one denominator is a multiple of the other (easy to convert); ~15% equivalent
+  function qRel(rng, M) {
+    var d1 = rng.int(2, Math.max(2, Math.floor(M / 2))), k = rng.int(2, Math.max(2, Math.floor(M / d1))), d2 = d1 * k;
+    if (d2 > M) { d1 = 2; d2 = 2 * rng.int(2, Math.floor(M / 2)); k = d2 / d1; }
+    var a = rng.int(1, d1 - 1), b;
+    if (rng.chance(0.15)) b = a * k; else do { b = rng.int(1, d2 - 1); } while (b === a * k);
+    return rng.chance(0.5) ? [[a, d1], [b, d2]] : [[b, d2], [a, d1]];
+  }
+  // unrelated small denominators (neither divides the other)
+  function qFar(rng, M) {
+    var top = Math.min(M, 10), d1, d2;
+    do { d1 = rng.int(2, top); d2 = rng.int(2, top); } while (d1 === d2 || d1 % d2 === 0 || d2 % d1 === 0);
+    var a, b;
+    do { a = rng.int(1, d1 - 1); b = rng.int(1, d2 - 1); } while (cmp([a, d1], [b, d2]) === '=');
+    return [[a, d1], [b, d2]];
+  }
+  function question(kind, rng, M) {
+    if (kind === 'same') return qSame(rng, M);
+    if (kind === 'rel') return qRel(rng, M);
+    if (kind === 'far') return qFar(rng, M);
+    var r = rng();                                   // mix
+    return r < 0.4 ? qSame(rng, M) : r < 0.7 ? qRel(rng, M) : qFar(rng, M);
+  }
+  function sheet(kind, rng, M) {
+    var out = [], seen = {};
+    for (var tries = 0; out.length < PER && tries < 2000; tries++) {
+      var q = question(kind, rng, M), id = q[0].join('/') + '|' + q[1].join('/');
+      if (seen[id]) continue;
+      seen[id] = 1; out.push(q);
+    }
+    return out;
+  }
+  function fr(f) { return '<span class="fr"><span>' + f[0] + '</span><span>' + f[1] + '</span></span>'; }
+
+  Worksheet({
+    title: 'So sánh phân số',
+    kicker: 'Toán · Phân số',
+    intro: 'Phiếu điền dấu &gt;, &lt;, = giữa hai phân số, mỗi phiếu 20 câu. “Dễ → khó” theo thứ tự cùng mẫu số, khác mẫu số có mẫu này là bội của mẫu kia, khác mẫu số bất kỳ, rồi trộn. Bấm “Xáo đề” để có số mới.',
+    options: [
+      { key: 'd', label: 'Dạng bài', items: [['set', 'Dễ → khó'], ['same', 'Cùng mẫu số'], ['rel', 'Khác mẫu (mẫu là bội)'], ['far', 'Khác mẫu (bất kỳ)'], ['mix', 'Trộn']], def: 'set' },
+      { key: 'm', label: 'Mẫu số đến', items: [['10', '10'], ['12', '12'], ['20', '20'], ['30', '30']], def: '12' },
+      { key: 'c', label: 'Số phiếu', items: [['1', '1'], ['2', '2'], ['3', '3'], ['5', '5']], def: '5' }
+    ],
+    build: function (st, rng, ws) {
+      var M = +st.m, c = +st.c;
+      var kinds = PATTERN[c];
+      if (st.d !== 'set') kinds = kinds.map(function () { return st.d; });
+      var sheets = kinds.map(function (k) { return { kind: k, qs: sheet(k, rng, M) }; });
+      var pages = sheets.map(function (s, i) {
+        var html = ws.head('Toán · Phân số · Phiếu ' + (i + 1), KIND_TITLE[s.kind]) +
+          '<p class="ws-task">Điền dấu &gt;, &lt;, = vào chỗ chấm.</p><div class="ps-grid">' +
+          s.qs.map(function (q, j) {
+            return '<div class="ps-q"><span class="l">' + ws.letters[j] + ')</span>' + fr(q[0]) + '<span class="dots">……</span>' + fr(q[1]) + '</div>';
+          }).join('') + '</div>';
+        return { html: html };
+      });
+      var key = sheets.map(function (s, i) {
+        return '<div class="ws-keytitle">Phiếu ' + (i + 1) + ' · ' + KIND_TITLE[s.kind] + '</div><div class="ps-key">' +
+          s.qs.map(function (q, j) {
+            return '<span>' + ws.letters[j] + ') ' + q[0].join('/') + ' <b>' + cmp(q[0], q[1]).replace('<', '&lt;').replace('>', '&gt;') + '</b> ' + q[1].join('/') + '</span>';
+          }).join('') + '</div>';
+      }).join('');
+      pages.push({ answer: true, html: ws.answerHead('Toán · Phân số', 'Đáp án – So sánh phân số') + key });
+      return pages;
+    }
+  });
+})();
+</script>
+<script src="../assets/back.js"></script>
+</body>
+</html>

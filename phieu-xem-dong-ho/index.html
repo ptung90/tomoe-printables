@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phiếu xem đồng hồ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/worksheet.css">
+<style>
+.dh-ex{display:flex;align-items:center;gap:7mm;border:.5mm solid #1f4e9a;background:#eef3fb;border-radius:1.5mm;padding:3.5mm 6mm;margin:0 0 6mm}
+.dh-ex figure{margin:0;text-align:center;font-weight:700;font-size:11pt}
+.dh-ex svg{width:30mm;height:30mm;display:block;background:#fff;border-radius:50%}
+.dh-ex p{margin:0 0 1.5mm;font-size:13pt;line-height:1.45}
+.kn{color:#1f4e9a;font-weight:700}.kd{color:#c62828;font-weight:700}
+.dh-grid{display:grid;border-top:.3mm solid #c8d3e6;border-left:.3mm solid #c8d3e6}
+.dh-grid>div{border-right:.3mm solid #c8d3e6;border-bottom:.3mm solid #c8d3e6;display:flex;flex-direction:column;align-items:center;padding:4mm 2mm 3.5mm;font-size:13pt}
+.dh-grid.c3{grid-template-columns:repeat(3,1fr)}
+.dh-grid.c3 svg{width:42mm;height:42mm;margin-bottom:2.5mm}
+.dh-grid.c2{grid-template-columns:repeat(2,1fr)}
+.dh-grid.c2 svg{width:56mm;height:56mm;margin-top:2mm}
+.dh-grid .lbl{font-weight:700;color:#1f4e9a;font-size:14pt}
+.dh-day{display:grid;grid-template-columns:42mm 1fr;border-top:.3mm solid #c8d3e6;border-left:.3mm solid #c8d3e6}
+.dh-day>div{border-right:.3mm solid #c8d3e6;border-bottom:.3mm solid #c8d3e6;padding:2.5mm 4mm;display:flex;align-items:center;font-size:13pt;line-height:1.9}
+.dh-day>div:nth-child(odd){justify-content:center}
+.dh-day svg{width:31mm;height:31mm}
+.dh-key p{margin:0 0 2.5mm;font-size:11.5pt}
+</style>
+</head>
+<body>
+<script src="../assets/worksheet.js"></script>
+<script>
+(function () {
+  'use strict';
+  var DAY = [
+    ['Buổi sáng, em thức dậy', [[5, 30], [6, 0], [6, 30]]],
+    ['Em đến lớp', [[7, 0], [7, 30], [8, 0]]],
+    ['Em ăn trưa', [[11, 0], [11, 30], [12, 0]]],
+    ['Buổi chiều, em về nhà', [[4, 0], [4, 30], [5, 0]]],
+    ['Buổi tối, em đi ngủ', [[8, 30], [9, 0], [9, 30]]]
+  ];
+
+  // analog clock face; hands omitted when h == null (children draw them)
+  function clock(h, m) {
+    var o = '<circle r="46" fill="#fff" stroke="#222" stroke-width="3.2"/>';
+    for (var i = 0; i < 60; i++) {
+      var a = i * Math.PI / 30, big = i % 5 === 0, r1 = big ? 39.5 : 42;
+      o += '<line x1="' + (r1 * Math.sin(a)).toFixed(2) + '" y1="' + (-r1 * Math.cos(a)).toFixed(2) + '" x2="' + (44.5 * Math.sin(a)).toFixed(2) + '" y2="' + (-44.5 * Math.cos(a)).toFixed(2) + '" stroke="#222" stroke-width="' + (big ? 1.8 : .8) + '"/>';
+    }
+    if (h != null) {
+      o += hand((h % 12 + m / 60) * 30, 22, 4.2, '#1f4e9a') + hand(m * 6, 35, 2, '#c62828');
+    }
+    // numbers go on top of the hands with a white halo so 12, 3, 6, 9 stay readable
+    for (var n = 1; n <= 12; n++) {
+      var b = n * Math.PI / 6;
+      o += '<text x="' + (31 * Math.sin(b)).toFixed(2) + '" y="' + (-31 * Math.cos(b)).toFixed(2) + '" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#222" stroke="#fff" stroke-width="2.4" paint-order="stroke">' + n + '</text>';
+    }
+    o += '<circle r="2.6" fill="#222"/>';
+    return '<svg viewBox="-50 -50 100 100" role="img" aria-label="' + (h == null ? 'Mặt đồng hồ chưa có kim' : h + ' giờ ' + m + ' phút') + '">' + o + '</svg>';
+  }
+  function hand(deg, len, w, col) {
+    var a = deg * Math.PI / 180, sx = Math.sin(a), cy = -Math.cos(a), px = -cy, py = sx;
+    var bx = (len - 6) * sx, by = (len - 6) * cy;
+    return '<line x1="0" y1="0" x2="' + bx.toFixed(2) + '" y2="' + by.toFixed(2) + '" stroke="' + col + '" stroke-width="' + w + '" stroke-linecap="round"/>' +
+      '<path d="M' + (len * sx).toFixed(2) + ' ' + (len * cy).toFixed(2) + 'L' + (bx + px * w * 1.1).toFixed(2) + ' ' + (by + py * w * 1.1).toFixed(2) + 'L' + (bx - px * w * 1.1).toFixed(2) + ' ' + (by - py * w * 1.1).toFixed(2) + 'Z" fill="' + col + '"/>';
+  }
+  function say(h, m) {
+    if (m === 0) return h + ' giờ';
+    if (m === 30) return h + ' giờ rưỡi';
+    return h + ' giờ ' + m + ' phút' + (m >= 35 ? ' (' + (h % 12 + 1) + ' giờ kém ' + (60 - m) + ')' : '');
+  }
+
+  Worksheet({
+    title: 'Phiếu xem đồng hồ',
+    kicker: 'Lịch sử · Đồng hồ',
+    intro: 'Năm phiếu như bản gốc: đọc giờ đúng, đọc giờ rưỡi, vẽ kim giờ đúng, vẽ kim giờ rưỡi, và một ngày của em. Chọn “Thêm 15 và 45 phút” hoặc “Thêm phút chẵn 5” để có thêm phiếu Đ6. Bấm “Xáo đề” để đổi giờ trên mọi đồng hồ.',
+    options: [
+      { key: 'k', label: 'Mức', items: [['0', 'Giờ đúng, giờ rưỡi'], ['15', 'Thêm 15 và 45 phút'], ['5', 'Thêm phút chẵn 5']], def: '0' }
+    ],
+    build: function (st, rng, ws) {
+      var K = 'Lịch sử · Đồng hồ', pages = [], key = [];
+      var hours = function (n) { return rng.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).slice(0, n); };
+
+      // Đ1, Đ2 — read the clock
+      [[0, 'Giờ đúng', 'Đ1'], [30, 'Giờ rưỡi', 'Đ2']].forEach(function (cfg) {
+        var m = cfg[0], hs = hours(7), ex = hs.pop();
+        var exText = m === 0
+          ? '<p><span class="kn">Kim ngắn</span> chỉ giờ. <span class="kd">Kim dài</span> chỉ phút.</p><p>Kim dài chỉ số 12 là giờ đúng. Kim ngắn chỉ số nào thì là mấy giờ.</p>'
+          : '<p><span class="kd">Kim dài</span> chỉ số 6 là giờ rưỡi (30 phút).</p><p><span class="kn">Kim ngắn</span> nằm giữa hai số: em đọc số nhỏ hơn.</p>';
+        pages.push({ html: ws.head(K + ' · Phiếu ' + cfg[2], cfg[1]) +
+          '<div class="dh-ex"><figure>' + clock(ex, m) + say(ex, m) + '</figure><div>' + exText + '</div></div>' +
+          '<p class="ws-task" style="font-style:italic;font-weight:400">Đồng hồ chỉ mấy giờ? Em viết vào chỗ trống.</p><div class="dh-grid c3">' +
+          hs.map(function (h) { return '<div>' + clock(h, m) + '<span>' + (m ? '...... giờ rưỡi' : '......... giờ') + '</span></div>'; }).join('') + '</div>' });
+        key.push('<p><b>' + cfg[2] + '</b> ' + hs.map(function (h) { return say(h, m); }).join(' · ') + '</p>');
+      });
+
+      // Đ3, Đ4 — draw the hands
+      [[0, 'Em vẽ kim – giờ đúng', 'Đ3', 'Vẽ kim dài chỉ số 12 và kim ngắn chỉ số giờ. Kim ngắn phải ngắn hơn kim dài.'],
+       [30, 'Em vẽ kim – giờ rưỡi', 'Đ4', 'Vẽ kim dài chỉ số 6 và kim ngắn nằm giữa hai số.']].forEach(function (cfg) {
+        var m = cfg[0], hs = hours(4);
+        pages.push({ html: ws.head(K + ' · Phiếu ' + cfg[2], cfg[1]) + '<p class="ws-task" style="font-style:italic;font-weight:400">' + cfg[3] + '</p><div class="dh-grid c2">' +
+          hs.map(function (h) { return '<div><span class="lbl">' + say(h, m) + '</span>' + clock(null) + '</div>'; }).join('') + '</div>' });
+        key.push('<p><b>' + cfg[2] + '</b> ' + (m ? 'Kim dài chỉ số 6; kim ngắn nằm giữa ' + hs.map(function (h) { return h + ' và ' + (h % 12 + 1); }).join(', ')
+                                                  : 'Kim dài chỉ số 12; kim ngắn chỉ số ' + hs.join(', ')) + '.</p>');
+      });
+
+      // Đ5 — một ngày của em
+      var times = DAY.map(function (d) { return rng.pick(d[1]); });
+      pages.push({ html: ws.head(K + ' · Phiếu Đ5', 'Một ngày của em') + '<p class="ws-task" style="font-style:italic;font-weight:400">Em nhìn đồng hồ rồi viết giờ vào chỗ trống.</p><div class="dh-day">' +
+        DAY.map(function (d, i) { return '<div>' + clock(times[i][0], times[i][1]) + '</div><div>' + d[0] + '<br>lúc ............................................</div>'; }).join('') + '</div>' });
+      key.push('<p><b>Đ5</b> ' + times.map(function (t) { return say(t[0], t[1]); }).join(' · ') + '</p>');
+
+      // Đ6 — quarter hours or five-minute steps
+      if (st.k !== '0') {
+        var mins = st.k === '15' ? [15, 45] : [5, 10, 15, 20, 25, 35, 40, 45, 50, 55];
+        var q = hours(6).map(function (h) { return [h, rng.pick(mins)]; });
+        pages.push({ html: ws.head(K + ' · Phiếu Đ6', st.k === '15' ? 'Giờ 15 phút, giờ 45 phút' : 'Đọc giờ và phút') +
+          '<div class="dh-ex"><figure>' + clock(2, 15) + '2 giờ 15 phút</figure><div><p><span class="kd">Kim dài</span> chỉ số nào thì đếm số đó × 5 phút (số 3 là 15 phút, số 9 là 45 phút).</p><p><span class="kn">Kim ngắn</span> đã qua số nào thì đọc số giờ đó.</p></div></div>' +
+          '<p class="ws-task" style="font-style:italic;font-weight:400">Đồng hồ chỉ mấy giờ? Em viết vào chỗ trống.</p><div class="dh-grid c3">' +
+          q.map(function (t) { return '<div>' + clock(t[0], t[1]) + '<span>...... giờ ...... phút</span></div>'; }).join('') + '</div>' });
+        key.push('<p><b>Đ6</b> ' + q.map(function (t) { return say(t[0], t[1]); }).join(' · ') + '</p>');
+      }
+
+      pages.push({ answer: true, html: ws.answerHead(K, 'Đáp án – Phiếu xem đồng hồ') + '<div class="dh-key">' + key.join('') +
+        '<p style="color:#5f6b76;font-style:italic">Gợi ý: trước khi làm phiếu, cho trẻ xoay kim trên đồng hồ giáo cụ. Lỗi hay gặp ở giờ rưỡi là đọc theo số lớn hơn (ví dụ đọc 3 giờ rưỡi thành 4 giờ rưỡi).</p></div>' });
+      return pages;
+    }
+  });
+})();
+</script>
+<script src="../assets/back.js"></script>
+</body>
+</html>
