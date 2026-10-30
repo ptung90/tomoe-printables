@@ -44,7 +44,7 @@
   };
 
   window.Worksheet = function (cfg) {
-    var options = (cfg.options || []).concat([{ key: 'ans', label: 'Đáp án', items: [['1', 'Kèm đáp án'], ['0', 'Không in đáp án']], def: '1' }]);
+    var options = (cfg.options || []).concat([{ key: 'ans', label: 'Đáp án', items: [['0', 'Không in đáp án'], ['1', 'Kèm đáp án']], def: '0' }]);
     var state = {}, seed;
     options.forEach(function (o) { state[o.key] = String(o.def); });
     try {
