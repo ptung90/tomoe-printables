@@ -25,8 +25,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);fo
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 56px}
 .wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 .mast{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
-.brand{display:flex;align-items:flex-end;gap:14px}
-.brand img{height:clamp(56px,8vw,72px);width:auto;flex:none}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(10px,2vw,18px)}
+.brand img{width:clamp(280px,46vw,440px);max-width:100%;height:auto}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:600}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
 h1 em{font-style:normal;color:var(--accent)}
@@ -63,11 +63,8 @@ footer{color:var(--ink2);font-size:13px;border-top:1px solid var(--line);padding
 <div class="wrap">
   <div class="mast">
     <div class="brand">
-      <img src="assets/logo-tomoe-t.svg" alt="">
-      <div>
-        <div class="eyebrow">Tiểu học TOMOE</div>
-        <h1>Học liệu <em>in &amp; chơi</em></h1>
-      </div>
+      <img src="assets/logo-tomoe.svg" alt="Tomoe Montessori Elementary">
+      <h1>Học liệu <em>in &amp; chơi</em></h1>
     </div>
     <div class="count" id="count"></div>
   </div>
