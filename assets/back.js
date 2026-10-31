@@ -8,4 +8,10 @@
     'padding:8px 12px;border-radius:999px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}.tp-back:hover{border-color:#2f7d8a}'+
     '@media print{.tp-back{display:none!important}}';
   document.head.appendChild(s);document.body.appendChild(a);
+  // fallback favicon for pages that don't declare one in <head>
+  if(!document.querySelector('link[rel~="icon"]')){
+    var i=document.createElement('link');
+    i.rel='icon';i.type='image/svg+xml';i.href='../assets/logo-tomoe-t.svg';
+    document.head.appendChild(i);
+  }
 })();
