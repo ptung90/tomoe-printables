@@ -27,6 +27,9 @@
     window.addEventListener('message',function(e){
       if(e.source===window.parent&&e.data&&e.data.tomoe==='print')window.print();
     });
+    window.addEventListener('keydown',function(e){
+      if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey&&(e.key==='p'||e.key==='P'||e.code==='KeyP')){e.preventDefault();window.print();}
+    });
     report();
   }
 })();
