@@ -24,13 +24,10 @@
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 56px}
 .wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
-.mast{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
-.brand{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(10px,2vw,18px)}
-.brand img{width:clamp(280px,46vw,440px);max-width:100%;height:auto}
-.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:600}
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px clamp(16px,3vw,28px)}
+.mast img{width:clamp(200px,26vw,260px);max-width:100%;height:auto}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
 h1 em{font-style:normal;color:var(--accent)}
-.count{color:var(--ink2);font-size:14px;font-variant-numeric:tabular-nums}
 .search{position:relative}
 .search input{width:100%;font:500 17px var(--f-body);color:var(--ink);background:var(--paper);border:1.5px solid var(--line);
   border-radius:14px;padding:14px 16px 14px 46px;outline:none}
@@ -62,11 +59,8 @@ footer{color:var(--ink2);font-size:13px;border-top:1px solid var(--line);padding
 <body>
 <div class="wrap">
   <div class="mast">
-    <div class="brand">
-      <img src="assets/logo-tomoe.svg" alt="Tomoe Montessori Elementary">
-      <h1>Học liệu <em>in &amp; chơi</em></h1>
-    </div>
-    <div class="count" id="count"></div>
+    <img src="assets/logo-tomoe.svg" alt="Tomoe Montessori Elementary">
+    <h1>Học liệu <em>in &amp; chơi</em></h1>
   </div>
 
   <label class="search" for="q">
@@ -126,7 +120,6 @@ footer{color:var(--ink2);font-size:13px;border-top:1px solid var(--line);padding
         </div>
       </a>`).join('');
     document.getElementById('empty').hidden=list.length>0;
-    document.getElementById('count').textContent=list.length===pages.length?`${pages.length} trang`:`${list.length} / ${pages.length} trang`;
     try{const s=new URLSearchParams();if(q.value)s.set('q',q.value);if(subj!=='Tất cả')s.set('mon',subj);
       history.replaceState(null,'',location.pathname+(s.toString()?'?'+s:''));}catch(e){}
   }
