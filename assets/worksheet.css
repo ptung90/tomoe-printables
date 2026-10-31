@@ -41,7 +41,9 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-bod
 .page .foot{position:absolute;left:15mm;right:15mm;bottom:6mm;font-size:8pt;color:#8a96a3;display:flex;justify-content:space-between}
 
 /* worksheet header: kicker · title · name/date */
-.ws-head{border-bottom:.5mm solid #1f2933;padding-bottom:2.5mm;margin-bottom:4mm}
+.ws-head{position:relative;border-bottom:.5mm solid #1f2933;padding-bottom:2.5mm;margin-bottom:4mm}
+.ws-head .ws-logo{position:absolute;right:0;top:0;height:13mm;width:auto}
+.ws-head .kicker,.ws-head h2{padding-right:16mm}
 .ws-head .kicker{font-size:8.5pt;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6b7785}
 .ws-head h2{margin:.6mm 0 2mm;font-size:19pt;line-height:1.15;font-weight:700}
 .ws-head .who{display:flex;gap:6mm;font-size:11pt;color:#3d4a57}

@@ -29,16 +29,19 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function newSeed() { return 1000 + Math.floor(Math.random() * 98999); }
 
+  // the school's "T" sprout, top-right of every worksheet header; resolved next to this script
+  var LOGO = '<img class="ws-logo" alt="TOMOE" src="' + new URL('logo-tomoe-t.svg', document.currentScript.src).href + '">';
+
   // helpers handed to build()
   var ws = {
     esc: esc,
     // standard worksheet header: kicker line, title, name + date lines
     head: function (kicker, title) {
-      return '<header class="ws-head"><div class="kicker">' + esc(kicker) + '</div><h2>' + esc(title) + '</h2>' +
+      return '<header class="ws-head">' + LOGO + '<div class="kicker">' + esc(kicker) + '</div><h2>' + esc(title) + '</h2>' +
         '<div class="who"><span>Họ và tên: ………………………………………………………</span><span>Ngày: ………………………</span></div></header>';
     },
     answerHead: function (kicker, title) {
-      return '<header class="ws-head"><div class="kicker">' + esc(kicker) + '</div><h2>' + esc(title) + '</h2></header>';
+      return '<header class="ws-head">' + LOGO + '<div class="kicker">' + esc(kicker) + '</div><h2>' + esc(title) + '</h2></header>';
     },
     letters: 'abcdefghijklmnopqrstuvwxyz'.split('')
   };

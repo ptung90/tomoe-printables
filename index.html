@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Học liệu TOMOE</title>
+<link rel="icon" href="assets/logo-tomoe-t.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
@@ -24,6 +25,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);fo
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 56px}
 .wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 .mast{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.brand{display:flex;align-items:flex-end;gap:14px}
+.brand img{height:clamp(56px,8vw,72px);width:auto;flex:none}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:600}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
 h1 em{font-style:normal;color:var(--accent)}
@@ -59,9 +62,12 @@ footer{color:var(--ink2);font-size:13px;border-top:1px solid var(--line);padding
 <body>
 <div class="wrap">
   <div class="mast">
-    <div>
-      <div class="eyebrow">Tiểu học TOMOE</div>
-      <h1>Học liệu <em>in &amp; chơi</em></h1>
+    <div class="brand">
+      <img src="assets/logo-tomoe-t.svg" alt="">
+      <div>
+        <div class="eyebrow">Tiểu học TOMOE</div>
+        <h1>Học liệu <em>in &amp; chơi</em></h1>
+      </div>
     </div>
     <div class="count" id="count"></div>
   </div>
